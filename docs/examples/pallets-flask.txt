@@ -50,7 +50,7 @@
 
 
 ──────────────────────────────────────────────────────────────────────
-  Analyzed 233 files in 68ms
+  Analyzed 233 files in 73ms
 
   codeglance --markdown  save this as codebase-tour.md
   codeglance --for-ai    generate a compact LLM context brief

@@ -95,15 +95,24 @@ const KEYWORD_DESC: Record<string, string> = {
   // Python/Flask specific
   blueprint: 'route blueprint', blueprints: 'route blueprints',
   globals: 'global request context', session: 'session management', sessions: 'session management',
-  // General
+  // General utilities
   errors: 'error types',        error: 'error handling',
   debug: 'debug utilities',     logging: 'logging setup',
   fs: 'filesystem helpers',     mode: 'runtime mode',
+  url: 'URL parsing',           uri: 'URI handling',
+  path: 'path utilities',       io: 'I/O helpers',
   plugin: 'plugin system',      plugins: 'plugin system',
   hook: 'lifecycle hooks',      hooks: 'lifecycle hooks',
   event: 'event system',        events: 'event system',
   cache: 'caching layer',       queue: 'task queue',
   worker: 'background worker',  job: 'background job',        jobs: 'background jobs',
+  // Rendering
+  markdown: 'Markdown renderer', template: 'template engine',  render: 'renderer',
+  // Platform integrations — filename named after a service
+  github: 'GitHub integration',  gitlab: 'GitLab integration',
+  bitbucket: 'Bitbucket integration',
+  slack: 'Slack integration',    stripe: 'Stripe integration',
+  aws: 'AWS integration',        gcp: 'GCP integration',       azure: 'Azure integration',
 };
 
 // Generic names that need directory context to be meaningful

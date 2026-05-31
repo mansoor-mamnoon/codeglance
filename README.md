@@ -36,7 +36,7 @@ npx codeglance --for-ai                               # compact LLM context brie
 npx codeglance --markdown --output docs/codebase-tour.md  # save as Markdown
 ```
 
-No install required. Works on any directory.
+No install required. Runs on any directory. Works best on repos with common manifest files.
 
 ---
 
@@ -87,8 +87,10 @@ All outputs below were captured by running codeglance against the actual repos.
   main.go           main package
   Dockerfile        container definition
   config_cmd.go     cmd configuration
-  github.go         github
-  ui/markdown.go    markdown (ui/)
+  github.go         GitHub integration
+  gitlab.go         GitLab integration
+  url.go            URL parsing
+  ui/markdown.go    Markdown renderer
 
 ── TOOLS DETECTED ────────────────────────────────────────────────────
   CI/CD        GitHub Actions (6 workflows)

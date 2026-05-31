@@ -17,10 +17,10 @@
   main.go           main package
   Dockerfile        container definition
   config_cmd.go     cmd configuration
-  github.go         github
-  gitlab.go         gitlab
-  url.go            url
-  ui/markdown.go    markdown (ui/)
+  github.go         GitHub integration
+  gitlab.go         GitLab integration
+  url.go            URL parsing
+  ui/markdown.go    Markdown renderer
   ui/stashhelp.go   stashhelp (ui/)
   (ranked by heuristics — not semantic analysis)
 
@@ -50,7 +50,7 @@
 
 
 ──────────────────────────────────────────────────────────────────────
-  Analyzed 45 files in 89ms
+  Analyzed 45 files in 87ms
 
   codeglance --markdown  save this as codebase-tour.md
   codeglance --for-ai    generate a compact LLM context brief
