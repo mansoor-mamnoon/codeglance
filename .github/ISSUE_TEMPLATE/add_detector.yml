@@ -1,0 +1,37 @@
+name: Add a detector
+description: Request or propose a new ecosystem/framework detector
+labels: [enhancement, good first issue]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Adding a new detector is a great first contribution. Each detector is a self-contained module
+        in `src/detectors/`. See CONTRIBUTING.md for the full guide.
+
+  - type: input
+    id: ecosystem
+    attributes:
+      label: Ecosystem or framework
+      description: What should be detected? (e.g., "Bun", "Laravel", "Spring Boot")
+      placeholder: e.g., Laravel (PHP)
+    validations:
+      required: true
+
+  - type: textarea
+    id: detection
+    attributes:
+      label: How would detection work?
+      description: What files or package names can be checked? Be specific.
+      placeholder: |
+        - Check for `laravel/framework` in `composer.json` `require`
+        - Check for `artisan` file in root
+        - Check for `.env.example` with `APP_ENV=local`
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Would you like to implement this?
+      options:
+        - label: Yes, I'd like to submit a PR for this.
