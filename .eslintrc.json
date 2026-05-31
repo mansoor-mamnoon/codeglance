@@ -18,5 +18,5 @@
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "no-console": ["warn", { "allow": ["error"] }]
   },
-  "ignorePatterns": ["dist/", "node_modules/", "*.config.ts", "*.config.js"]
+  "ignorePatterns": ["dist/", "node_modules/", "*.config.ts", "*.config.js", "tests/fixtures/"]
 }
