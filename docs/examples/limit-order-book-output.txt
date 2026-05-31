@@ -1,0 +1,57 @@
+
+  codeglance  limit-order-book · Python
+  ~/projects/limit-order-book
+
+── WHAT IS THIS ──────────────────────────────────────────────────────
+  aiohttp with Pandas
+  Runtime     Python >=3.9
+  Frameworks  Click  ·  Typer
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  python app.py   run application
+  pytest          run test suite
+
+── WHERE TO START ────────────────────────────────────────────────────
+  app.py                   app entry
+  Dockerfile               container definition
+  make_day20_charts.py     root-level source
+  cpp/src/bench.cpp        src module
+  cpp/src/book_core.cpp    src module
+  cpp/src/logging.cpp      src module
+  cpp/src/replay.cpp       src module
+  cpp/src/taq_writer.cpp   src module
+  (ranked by heuristics — not semantic analysis)
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  CI/CD        GitHub Actions (1 workflows)
+  Container    Docker
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  C++           29     17k lines  ████████████░░░░░░  65%
+  Python        38    7.2k lines  █████░░░░░░░░░░░░░  27%
+  ────────────────────────────────────────────────────────────────────
+  Markdown       3    1.3k lines
+  YAML          11     260 lines
+  JSON           3     225 lines
+  136 files  ·  26k lines  ·  7 languages
+
+── GIT ───────────────────────────────────────────────────────────────
+  Branch  main  ·  first commit 9 months ago
+  Last commit  9 months ago  Mansoor Mamnoon: "fixed readme formatting"  07b2f19
+
+── HEALTH ────────────────────────────────────────────────────────────
+  ○  Tests          no test directory found
+  ✓  CI/CD          GitHub Actions
+  ✓  README         README.md present
+  ○  License        no LICENSE file
+  ○  Changelog      no CHANGELOG.md
+  ○  Contributing   no CONTRIBUTING.md
+
+
+──────────────────────────────────────────────────────────────────────
+  Analyzed 136 files in 89ms
+
+  codeglance --markdown  save this as codebase-tour.md
+  codeglance --for-ai    generate a compact LLM context brief
+  codeglance --json      machine-readable output
+

@@ -78,7 +78,7 @@ Sleep 3s
 
 - [ ] Repository is public
 - [ ] Description set: "The 10-second codebase tour. Understand any repo in one command."
-- [ ] Topics added: `cli`, `developer-tools`, `codebase`, `typescript`, `nodejs`, `open-source`
+- [ ] Topics added: `cli`, `developer-tools`, `codebase-analysis`, `onboarding`, `typescript`, `static-analysis`, `llm`, `repo-analyzer`, `nodejs`, `open-source`
 - [ ] Homepage URL set to npm package page (once published)
 - [ ] GitHub Actions CI badge URL updated in README to reflect real repo
 - [ ] Issue templates are live (verify by opening a new issue)

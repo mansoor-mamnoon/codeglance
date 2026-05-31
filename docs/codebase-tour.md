@@ -48,20 +48,20 @@ Files to open first (heuristic ranking):
 
 | Language | Files | Lines | Share |
 |----------|------:|------:|------:|
-| TypeScript | 25 | 3,156 | 59% |
+| TypeScript | 26 | 3,278 | 54% |
+| JavaScript | 1 | 232 | 4% |
 | C++ | 4 | 126 | 2% |
 | Rust | 3 | 104 | 2% |
-| Python | 4 | 89 | 2% |
+| Python | 4 | 89 | 1% |
 | Go | 2 | 56 | 1% |
 | Makefile | 2 | 46 | 1% |
 | C | 2 | 33 | 1% |
-| Dockerfile | 2 | 27 | 1% |
 
 ## Git Activity
 
 - **Branch:** `main`
-- **Last commit:** today — "feat: add C++ CMake detector, flesh out all 5 fixture repos, fix version" (Mansoor Mamnoon)
-- **Last 30 days:** 16 commits by 1 contributors
+- **Last commit:** today — "docs: replace all placeholders, add real fixture outputs, SECURITY, self" (Mansoor Mamnoon)
+- **Last 30 days:** 17 commits by 1 contributors
 - **Repo age:** today
 
 ## Project Health
@@ -73,4 +73,4 @@ Files to open first (heuristic ranking):
 - ✅ Changelog
 - ✅ Contributing guide
 
-*79 files · 5,381 lines · analyzed in 40ms*
+*90 files · 6,032 lines · analyzed in 39ms*

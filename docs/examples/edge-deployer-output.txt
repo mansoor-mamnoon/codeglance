@@ -1,0 +1,69 @@
+
+  codeglance  edge-deployer · Node.js
+  ~/projects/edge-deployer
+
+── WHAT IS THIS ──────────────────────────────────────────────────────
+  React 19
+  Pkg manager npm
+  Frameworks  Electron 36
+  Testing      Jest 29
+  Build        Webpack 5  ·  TypeScript 5
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  npm run dev             start development server
+  npm run start           start production server
+  npm run build           build for production
+  npm run build:prod      build:prod
+  npm run test            run test suite
+  npm run typecheck       type-check
+  npm run tsc:watch       tsc:watch
+  npm run webpack:serve   webpack:serve
+
+── WHERE TO START ────────────────────────────────────────────────────
+  src/index.js                        main entry
+  src/index.tsx                       main entry
+  src/types.ts                        type definitions
+  electron/main.ts                    main entry
+  src/lib/securityScanner.ts          lib module
+  take-screenshots.mjs                root-level source
+  webpack.config.js                   root-level source
+  src/cloudDeployers/awsDeployer.ts   src/cloudDeployers module
+  (ranked by heuristics — not semantic analysis)
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  Testing      Jest  (src/__tests__/)
+  CI/CD        GitHub Actions (2 workflows)
+  Env files    .env
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  TypeScript      57    8.4k lines  █████████████░░░░░  73%
+  JavaScript       9     725 lines  █░░░░░░░░░░░░░░░░░   6%
+  HTML             2     298 lines  █░░░░░░░░░░░░░░░░░   3%
+  CSS              1     159 lines  ░░░░░░░░░░░░░░░░░░   1%
+  ────────────────────────────────────────────────────────────────────
+  Markdown        10    1.3k lines
+  YAML             3     335 lines
+  JSON             7     279 lines
+  104 files  ·  12k lines  ·  8 languages
+
+── GIT ───────────────────────────────────────────────────────────────
+  Branch  main  ·  first commit 7 days ago
+  Last commit  7 days ago  Mansoor Mamnoon: "remove unused axios dep, update aws-sdk"  b4b8727
+  Activity    3 commits  1 contributors  (last 30 days)
+
+── HEALTH ────────────────────────────────────────────────────────────
+  ✓  Tests          src/__tests__/
+  ✓  CI/CD          GitHub Actions
+  ✓  README         README.md present
+  ○  License        no LICENSE file
+  ○  Changelog      no CHANGELOG.md
+  ✓  Contributing   CONTRIBUTING.md present
+
+
+──────────────────────────────────────────────────────────────────────
+  Analyzed 104 files in 56ms
+
+  codeglance --markdown  save this as codebase-tour.md
+  codeglance --for-ai    generate a compact LLM context brief
+  codeglance --json      machine-readable output
+

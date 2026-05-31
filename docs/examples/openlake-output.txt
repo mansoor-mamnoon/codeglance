@@ -1,0 +1,54 @@
+
+  codeglance  openlake · Python
+  ~/projects/openlake
+
+── WHAT IS THIS ──────────────────────────────────────────────────────
+  FastAPI
+  Runtime     Python >=3.11
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  pytest         run test suite
+  ruff check .   lint with Ruff
+
+── WHERE TO START ────────────────────────────────────────────────────
+  docker-compose.yml   compose services
+  api/Dockerfile       api module
+  ui/app/page.tsx      app module
+  (ranked by heuristics — not semantic analysis)
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  Testing      (tests/)
+  Container    docker-compose
+  Linting      Ruff  ·  mypy
+  Env files    .env.example
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  TypeScript       3      45 lines  ██░░░░░░░░░░░░░░░░  11%
+  Dockerfile       2      27 lines  █░░░░░░░░░░░░░░░░░   7%
+  Python           4      20 lines  █░░░░░░░░░░░░░░░░░   5%
+  ────────────────────────────────────────────────────────────────────
+  Markdown        10     178 lines
+  YAML             1      68 lines
+  TOML             1      36 lines
+  24 files  ·  394 lines  ·  7 languages
+
+── GIT ───────────────────────────────────────────────────────────────
+  Branch  main  ·  first commit 4 months ago
+  Last commit  4 months ago  Mansoor Mamnoon: "added documentation for open sourcing and project track…"  5f6a829
+
+── HEALTH ────────────────────────────────────────────────────────────
+  ✓  Tests          tests/
+  ○  CI/CD          no CI config found
+  ✓  README         README.md present
+  ○  License        no LICENSE file
+  ○  Changelog      no CHANGELOG.md
+  ○  Contributing   no CONTRIBUTING.md
+
+
+──────────────────────────────────────────────────────────────────────
+  Analyzed 24 files in 87ms
+
+  codeglance --markdown  save this as codebase-tour.md
+  codeglance --for-ai    generate a compact LLM context brief
+  codeglance --json      machine-readable output
+
