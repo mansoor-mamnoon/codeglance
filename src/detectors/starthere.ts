@@ -103,11 +103,19 @@ function scoreFile(file: ScannedFile): { score: number; reason: string } | null 
   if (file.lines >= 50 && file.lines <= 500) score += 25;
   else if (file.lines > 500 && file.lines <= 1000) score += 10;
 
-  // If no specific reason, derive one from the path
+  // If no specific reason, derive one from directory name
   if (!reason) {
     const dir = parts[parts.length - 2] ?? '';
-    if (IMPORTANT_DIRS.has(dir)) reason = `${dir} module`;
-    else reason = path.dirname(rel) === '.' ? 'root-level source' : path.dirname(rel);
+    const grandDir = parts[parts.length - 3] ?? '';
+    if (IMPORTANT_DIRS.has(dir)) {
+      // Make directory-based reasons read naturally
+      const singular = dir.endsWith('s') && dir.length > 3 ? dir.slice(0, -1) : dir;
+      reason = `${singular} module`;
+    } else if (IMPORTANT_DIRS.has(grandDir)) {
+      reason = `${grandDir}/${dir} module`;
+    } else {
+      reason = path.dirname(rel) === '.' ? 'root-level source' : `in ${path.dirname(rel)}/`;
+    }
   }
 
   if (score <= 0) return null;

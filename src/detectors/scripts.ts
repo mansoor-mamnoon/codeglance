@@ -18,15 +18,17 @@ async function exists(p: string): Promise<boolean> {
   catch { return false; }
 }
 
-// Heuristic kind from npm script name
+// Heuristic kind from npm script name.
+// Order matters: test must be checked before dev to prevent test:watch
+// from matching the `watch` fragment.
 function inferKind(name: string, cmd: string): ScriptKind {
   const n = name.toLowerCase();
   const c = cmd.toLowerCase();
-  if (/\bdev\b|start:dev|watch/.test(n) || /next dev|vite|tsx watch|nodemon/.test(c)) return 'dev';
+  if (/^(test|spec|e2e|coverage|typecheck|check:types)/.test(n) || /\bjest\b|\bvitest\b|playwright|cypress|mocha/.test(c)) return 'test';
   if (/^(build|compile|bundle|generate|export)/.test(n)) return 'build';
-  if (/^(test|spec|e2e|coverage|check:types|typecheck)/.test(n) || /jest|vitest|playwright|cypress|mocha/.test(c)) return 'test';
-  if (/^(lint|eslint|biome|format|check)/.test(n) || /eslint|prettier|biome|ruff|flake8/.test(c)) return 'lint';
+  if (/^(lint|eslint|biome|format|fmt)/.test(n) || /eslint|prettier|biome|ruff|flake8/.test(c)) return 'lint';
   if (/^start$/.test(n)) return 'start';
+  if (/^dev$|^develop$|^start:dev$|^watch$/.test(n) || /next dev|(?<![a-z])vite(?![a-z])|tsx watch|nodemon/.test(c)) return 'dev';
   if (/deploy|release|publish|ship/.test(n)) return 'deploy';
   return 'other';
 }
@@ -49,7 +51,8 @@ function describeScript(name: string, cmd: string): string {
   if (n === 'db:seed' || n === 'seed') return 'seed database';
   if (n === 'generate' || n === 'gen') return 'run code generation';
   if (/next dev/.test(cmd)) return 'start Next.js dev server';
-  if (/vite/.test(cmd)) return 'start Vite dev server';
+  if (/(?<![a-z])vite(?![a-z])/.test(cmd)) return 'start Vite dev server';
+  if (/\bvitest\b/.test(cmd)) return 'run Vitest test suite';
   if (/prisma/.test(cmd)) return 'Prisma operation';
   return name;
 }

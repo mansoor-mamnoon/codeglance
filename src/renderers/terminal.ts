@@ -85,8 +85,13 @@ function renderFrameworks(result: AnalysisResult): string {
     lines.push(`  ${chalk.dim('Pkg manager')} ${scripts.packageManager}`);
   }
 
-  // Primary frameworks with versions
-  const primary = frameworks.primary.filter((f) => f.name !== 'TypeScript');
+  // Primary frameworks with versions (skip TypeScript and CLI frameworks already in summary)
+  const summaryNames = new Set(
+    frameworks.summary.split(/[\s,·]+/).map((s) => s.toLowerCase()),
+  );
+  const primary = frameworks.primary.filter(
+    (f) => f.name !== 'TypeScript' && !summaryNames.has(f.name.toLowerCase()),
+  );
   if (primary.length > 0) {
     const tags = primary.map((f) =>
       chalk.cyan(f.name) + (f.version ? chalk.dim(` ${f.version}`) : ''),
@@ -308,27 +313,25 @@ function renderGit(result: AnalysisResult): string {
 function renderHealth(result: AnalysisResult): string {
   const { tools } = result;
 
-  const checks: Array<[boolean, string, string]> = [
-    [tools.hasTests, 'Tests', tools.testDirHint ?? 'found'],
-    [tools.ci !== null, 'CI/CD', tools.ci ?? ''],
-    [tools.hasReadme, 'README', 'present'],
-    [tools.hasLicense, 'License', 'present'],
-    [tools.hasChangelog, 'Changelog', 'CHANGELOG.md'],
-    [tools.hasContributing, 'Contributing', 'CONTRIBUTING.md'],
-  ].filter(([, label]) => label) as Array<[boolean, string, string]>;
+  // Each entry: [found, label, hint-when-found, label-when-missing]
+  const checks: Array<[boolean, string, string, string]> = [
+    [tools.hasTests,      'Tests',       tools.testDirHint ?? 'test directory found', 'no test directory found'],
+    [tools.ci !== null,   'CI/CD',       tools.ci ?? '',                               'no CI config found'],
+    [tools.hasReadme,     'README',      'README.md present',                          'no README.md'],
+    [tools.hasLicense,    'License',     'LICENSE present',                            'no LICENSE file'],
+    [tools.hasChangelog,  'Changelog',   'CHANGELOG.md present',                       'no CHANGELOG.md'],
+    [tools.hasContributing, 'Contributing', 'CONTRIBUTING.md present',                 'no CONTRIBUTING.md'],
+  ].filter(([, label]) => label) as Array<[boolean, string, string, string]>;
 
-  const passing = checks.filter(([ok]) => ok).length;
-  if (passing === checks.length && checks.length === 0) return '';
-
-  // Only show health if there are missing items (green is silent)
+  // Only show health section if something is missing
   const missing = checks.filter(([ok]) => !ok);
-  if (missing.length === 0) return ''; // All good — skip section to keep output tight
+  if (missing.length === 0) return '';
 
   const lines: string[] = [rule('health')];
-  for (const [ok, label, hint] of checks) {
+  for (const [ok, label, hintOk, hintMissing] of checks) {
     const icon = ok ? chalk.green('✓') : chalk.yellow('○');
     const labelStr = col(label, 14);
-    const hintStr = ok ? chalk.dim(hint) : chalk.dim(`missing ${hint}`);
+    const hintStr = ok ? chalk.dim(hintOk) : chalk.dim(hintMissing);
     lines.push(`  ${icon}  ${labelStr} ${hintStr}`);
   }
   return lines.join('\n');

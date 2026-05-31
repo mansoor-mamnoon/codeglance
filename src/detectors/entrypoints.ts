@@ -55,20 +55,27 @@ const SHARED_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
   [['justfile', 'Justfile'], 'task definitions', 'config'],
 ];
 
+// Paths that are output artifacts, not source — skip them from entry points
+const SKIP_PATH_PREFIXES = ['dist/', 'build/', 'out/', 'target/', '.next/'];
+
+function isSourcePath(p: string): boolean {
+  return !SKIP_PATH_PREFIXES.some((prefix) => p.startsWith(prefix) || p.startsWith('./' + prefix));
+}
+
 async function fromPackageJsonBin(rootDir: string): Promise<EntryPoint[]> {
   try {
     const content = await readFile(path.join(rootDir, 'package.json'), 'utf8');
     const pkg = JSON.parse(content) as { main?: string; bin?: string | Record<string, string> };
     const entries: EntryPoint[] = [];
-    if (pkg.main && (await fileExists(path.join(rootDir, pkg.main)))) {
+    if (pkg.main && isSourcePath(pkg.main) && (await fileExists(path.join(rootDir, pkg.main)))) {
       entries.push({ relativePath: pkg.main, description: 'main (package.json)', type: 'main' });
     }
     if (pkg.bin) {
-      if (typeof pkg.bin === 'string' && (await fileExists(path.join(rootDir, pkg.bin)))) {
+      if (typeof pkg.bin === 'string' && isSourcePath(pkg.bin) && (await fileExists(path.join(rootDir, pkg.bin)))) {
         entries.push({ relativePath: pkg.bin, description: 'CLI binary', type: 'cli' });
       } else if (typeof pkg.bin === 'object') {
         for (const [name, p] of Object.entries(pkg.bin)) {
-          if (await fileExists(path.join(rootDir, p))) {
+          if (isSourcePath(p) && (await fileExists(path.join(rootDir, p)))) {
             entries.push({ relativePath: p, description: `CLI: ${name}`, type: 'cli' });
           }
         }
