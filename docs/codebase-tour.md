@@ -17,26 +17,26 @@
 | Command | Description |
 |---------|-------------|
 | `npm run dev` | start development server |
-| `npm run build` | build for production |
+| `npm run build` | bundle CLI for distribution |
 | `npm run test` | run test suite |
-| `npm run typecheck` | type-check |
-| `npm run test:watch` | run Vitest test suite |
+| `npm run typecheck` | run TypeScript type checker |
+| `npm run test:watch` | run tests in watch mode |
 | `npm run test:coverage` | run tests with coverage |
 | `npm run lint` | lint codebase |
-| `npm run format` | format code |
+| `npm run format` | format code with Prettier |
 
 ## Where to Start
 
 Files to open first (heuristic ranking):
 
-- `src/index.ts` — main entry
-- `src/analyzer.ts` — src module
-- `src/scanner.ts` — src module
-- `src/detectors/entrypoints.ts` — src/detectors module
-- `src/detectors/git.ts` — src/detectors module
-- `src/detectors/languages.ts` — src/detectors module
-- `src/detectors/scripts.ts` — src/detectors module
-- `src/detectors/starthere.ts` — src/detectors module
+- `src/index.ts` — CLI entry point
+- `src/analyzer.ts` — analysis orchestrator
+- `src/scanner.ts` — file scanner
+- `src/detectors/entrypoints.ts` — entry point finder
+- `src/detectors/git.ts` — git metadata
+- `src/detectors/languages.ts` — language breakdown
+- `src/detectors/scripts.ts` — command extractor
+- `src/detectors/starthere.ts` — start-here file ranker
 
 ## Tools & Infrastructure
 
@@ -48,7 +48,7 @@ Files to open first (heuristic ranking):
 
 | Language | Files | Lines | Share |
 |----------|------:|------:|------:|
-| TypeScript | 26 | 3,278 | 54% |
+| TypeScript | 26 | 3,423 | 54% |
 | JavaScript | 1 | 232 | 4% |
 | C++ | 4 | 126 | 2% |
 | Rust | 3 | 104 | 2% |
@@ -60,8 +60,8 @@ Files to open first (heuristic ranking):
 ## Git Activity
 
 - **Branch:** `main`
-- **Last commit:** today — "docs: replace all placeholders, add real fixture outputs, SECURITY, self" (Mansoor Mamnoon)
-- **Last 30 days:** 17 commits by 1 contributors
+- **Last commit:** today — "fix: improve WHERE TO START descriptions, fix Try-it-now wording" (Mansoor Mamnoon)
+- **Last 30 days:** 22 commits by 1 contributors
 - **Repo age:** today
 
 ## Project Health
@@ -73,4 +73,4 @@ Files to open first (heuristic ranking):
 - ✅ Changelog
 - ✅ Contributing guide
 
-*90 files · 6,032 lines · analyzed in 39ms*
+*94 files · 6,307 lines · analyzed in 41ms*

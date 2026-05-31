@@ -37,14 +37,22 @@ function inferKind(name: string, cmd: string): ScriptKind {
 function describeScript(name: string, cmd: string): string {
   const n = name.toLowerCase();
   if (n === 'dev' || n === 'start:dev') return 'start development server';
-  if (n === 'build') return 'build for production';
+  if (n === 'build') {
+    if (/tsup|ncc\b|\bpkg\b/.test(cmd)) return 'bundle CLI for distribution';
+    return 'build for production';
+  }
   if (n === 'start') return 'start production server';
   if (n === 'test') return 'run test suite';
   if (n.includes('e2e')) return 'run end-to-end tests';
+  if (n.includes('watch')) return 'run tests in watch mode';
   if (n.includes('coverage')) return 'run tests with coverage';
   if (n === 'lint') return 'lint codebase';
-  if (n === 'format' || n === 'fmt') return 'format code';
-  if (n === 'typecheck' || n === 'check:types' || n === 'type-check') return 'type-check';
+  if (n === 'format' || n === 'fmt') {
+    if (/prettier/.test(cmd)) return 'format code with Prettier';
+    if (/biome/.test(cmd)) return 'format code with Biome';
+    return 'format code';
+  }
+  if (n === 'typecheck' || n === 'check:types' || n === 'type-check') return 'run TypeScript type checker';
   if (n === 'preview') return 'preview production build';
   if (n === 'deploy') return 'deploy to production';
   if (n === 'db:migrate' || n === 'migrate') return 'run database migrations';

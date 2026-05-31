@@ -80,8 +80,8 @@ const KEYWORD_DESC: Record<string, string> = {
   api: 'API layer',
   util: 'utilities',            utils: 'utilities',
   helper: 'helpers',            helpers: 'helpers',
-  scanner: 'scanner',           parser: 'parser',
-  analyzer: 'analyzer',         orchestrator: 'orchestrator',
+  scanner: 'file scanner',       parser: 'parser',
+  analyzer: 'analysis orchestrator', orchestrator: 'orchestrator',
   cmd: 'command',               command: 'command',           commands: 'commands',
   cli: 'CLI entry',
   deployer: 'deployer',         deploy: 'deployment',
@@ -95,6 +95,14 @@ const KEYWORD_DESC: Record<string, string> = {
   // Python/Flask specific
   blueprint: 'route blueprint', blueprints: 'route blueprints',
   globals: 'global request context', session: 'session management', sessions: 'session management',
+  // Detector/renderer module names (so codeglance self-describes well)
+  entrypoints: 'entry point finder',
+  starthere: 'start-here file ranker',
+  forai: 'LLM context brief',
+  terminal: 'terminal output renderer',
+  git: 'git metadata',
+  languages: 'language breakdown',
+  scripts: 'command extractor',
   // General utilities
   errors: 'error types',        error: 'error handling',
   debug: 'debug utilities',     logging: 'logging setup',

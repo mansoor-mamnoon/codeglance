@@ -13,10 +13,10 @@ async function fileExists(p: string): Promise<boolean> {
 
 // Ordered candidate groups: first match in each group is taken
 const NODE_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
-  [['src/index.ts', 'src/index.js', 'src/index.tsx'], 'main entry', 'main'],
-  [['src/app.ts', 'src/app.js', 'app.ts', 'app.js'], 'app entry', 'main'],
+  [['src/index.ts', 'src/index.js', 'src/index.tsx'], 'app entry point', 'main'],
+  [['src/app.ts', 'src/app.js', 'app.ts', 'app.js'], 'app entry point', 'main'],
   [['src/server.ts', 'src/server.js', 'server.ts', 'server.js'], 'HTTP server', 'server'],
-  [['src/main.ts', 'src/main.js', 'main.ts'], 'main entry', 'main'],
+  [['src/main.ts', 'src/main.js', 'main.ts'], 'app entry point', 'main'],
   [['src/cli.ts', 'src/cli.js', 'cli.ts', 'cli.js', 'bin/cli.ts', 'bin/cli.js'], 'CLI entry', 'cli'],
   [['next.config.ts', 'next.config.js', 'next.config.mjs'], 'Next.js config', 'config'],
   [['vite.config.ts', 'vite.config.js'], 'Vite config', 'config'],
@@ -138,6 +138,16 @@ async function scanGoCmdDir(rootDir: string, seen: Set<string>): Promise<EntryPo
   return results;
 }
 
+async function isCLIPackage(rootDir: string): Promise<boolean> {
+  try {
+    const content = await readFile(path.join(rootDir, 'package.json'), 'utf8');
+    const pkg = JSON.parse(content) as { bin?: unknown };
+    return !!pkg.bin;
+  } catch {
+    return false;
+  }
+}
+
 export async function detectEntryPoints(
   rootDir: string,
   ecosystem: string,
@@ -148,7 +158,17 @@ export async function detectEntryPoints(
   if (ecosystem === 'Node.js') {
     entries.push(...(await fromPackageJsonBin(rootDir)));
     for (const e of entries) seen.add(e.relativePath);
-    entries.push(...(await scanCandidates(rootDir, NODE_CANDIDATES, seen)));
+
+    // Use CLI-aware descriptions when package has a bin field
+    const cli = await isCLIPackage(rootDir);
+    const candidates = cli
+      ? NODE_CANDIDATES.map(([files, desc, type]): [string[], string, EntryPoint['type']] =>
+          type === 'main' && desc === 'app entry point'
+            ? [files, 'CLI entry point', type]
+            : [files, desc, type],
+        )
+      : NODE_CANDIDATES;
+    entries.push(...(await scanCandidates(rootDir, candidates, seen)));
   } else if (ecosystem === 'Go') {
     entries.push(...(await scanGoCmdDir(rootDir, seen)));
     entries.push(...(await scanCandidates(rootDir, GO_CANDIDATES, seen)));
