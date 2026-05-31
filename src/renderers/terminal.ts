@@ -228,7 +228,8 @@ function renderLanguages(result: AnalysisResult): string {
   const { languages, totalLines, totalFiles } = result;
   if (languages.length === 0) return '';
 
-  const codeLangs = languages.filter((l) => !CONFIG_LANGUAGES.has(l.name));
+  // Filter to languages with at least 1% share to avoid tiny fixture/generated files cluttering output
+  const codeLangs = languages.filter((l) => !CONFIG_LANGUAGES.has(l.name) && l.percentage >= 1);
   const configLangs = languages.filter((l) => CONFIG_LANGUAGES.has(l.name));
 
   const lines: string[] = [rule('codebase')];

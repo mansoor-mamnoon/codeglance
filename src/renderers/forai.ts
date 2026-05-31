@@ -94,7 +94,7 @@ export function renderForAi(result: AnalysisResult): string {
   }
 
   // Language summary (brief)
-  const codeLangs = languages.filter((l) => !CONFIG_LANGUAGES.has(l.name)).slice(0, 4);
+  const codeLangs = languages.filter((l) => !CONFIG_LANGUAGES.has(l.name) && l.percentage >= 1).slice(0, 4);
   if (codeLangs.length > 0) {
     lines.push('## Codebase');
     lines.push(

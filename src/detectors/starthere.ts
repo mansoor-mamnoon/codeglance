@@ -76,6 +76,10 @@ function scoreFile(file: ScannedFile): { score: number; reason: string } | null 
   if (!file.language) return null;
   if (!file.lines) return null;
 
+  // Skip markup/documentation files — they're worth reading but aren't "source code"
+  const SKIP_LANGUAGES = new Set(['Markdown', 'reStructuredText', 'YAML', 'TOML', 'JSON', 'XML']);
+  if (SKIP_LANGUAGES.has(file.language)) return null;
+
   // Skip tiny files (likely stubs/re-exports) and huge ones (likely generated)
   if (file.lines < 15) return null;
   if (file.lines > 2000) return null;
