@@ -228,9 +228,6 @@ function renderLanguages(result: AnalysisResult): string {
   const { languages, totalLines, totalFiles } = result;
   if (languages.length === 0) return '';
 
-  const CODE = 'code';
-  const CONFIG = 'config / markup';
-
   const codeLangs = languages.filter((l) => !CONFIG_LANGUAGES.has(l.name));
   const configLangs = languages.filter((l) => CONFIG_LANGUAGES.has(l.name));
 
