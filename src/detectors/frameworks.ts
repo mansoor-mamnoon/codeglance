@@ -205,7 +205,13 @@ const PYTHON_FRAMEWORKS: FrameworkDef[] = [
 // ---------------------------------------------------------------------------
 
 function cleanVersion(raw: string): string {
-  return raw.replace(/^[\^~>=<*]/g, '').split('.')[0] ?? raw;
+  const cleaned = raw.replace(/^[\^~>=<*\s]/g, '').split(/\s/)[0] ?? raw;
+  if (!cleaned || cleaned === '*' || cleaned === 'latest') return '';
+  const parts = cleaned.split('.');
+  const major = parts[0] ?? '';
+  // Pre-1.0 packages: show major.minor so "Axum 0.7" doesn't truncate to just "0"
+  if (major === '0' && parts[1]) return `${major}.${parts[1]}`;
+  return major;
 }
 
 async function fromPackageJson(rootDir: string): Promise<{
@@ -473,6 +479,13 @@ function buildSummary(
     return `${ecosystem} service with ${aiPkg.name}`;
   }
 
+  if (ecosystem === 'C++' || ecosystem === 'C') {
+    const extras = frameworks.map((f) => f.name).slice(0, 3);
+    return extras.length > 0
+      ? `C++ project with ${extras.join(', ')}`
+      : 'C++ project (CMake)';
+  }
+
   if (frameworks.length > 0) {
     return `${ecosystem} project — ${frameworks
       .slice(0, 3)
@@ -493,13 +506,61 @@ const PRIMARY_CATEGORIES: FrameworkCategory[] = ['web_framework', 'ui_library', 
 // Public API
 // ---------------------------------------------------------------------------
 
+async function fromCMake(rootDir: string): Promise<{
+  frameworks: DetectedFramework[];
+  runtime: string | null;
+  ecosystem: string;
+} | null> {
+  const access = (await import('node:fs/promises')).access;
+  try {
+    await access(path.join(rootDir, 'CMakeLists.txt'));
+  } catch {
+    return null;
+  }
+
+  const content = await readFile(path.join(rootDir, 'CMakeLists.txt'), 'utf8');
+  const frameworks: DetectedFramework[] = [];
+
+  // Detect CMake-listed test/UI dependencies
+  if (/googletest|GTest|gtest/i.test(content)) {
+    frameworks.push({ name: 'GoogleTest', category: 'testing', version: null, ecosystem: 'C++' });
+  }
+  if (/Boost/i.test(content)) {
+    frameworks.push({ name: 'Boost', category: 'other', version: null, ecosystem: 'C++' });
+  }
+  if (/Qt[0-9]?::/i.test(content) || /find_package\(Qt/i.test(content)) {
+    frameworks.push({ name: 'Qt', category: 'ui_library', version: null, ecosystem: 'C++' });
+  }
+  if (/OpenCV/i.test(content)) {
+    frameworks.push({ name: 'OpenCV', category: 'other', version: null, ecosystem: 'C++' });
+  }
+  if (/Catch2/i.test(content)) {
+    frameworks.push({ name: 'Catch2', category: 'testing', version: null, ecosystem: 'C++' });
+  }
+  if (/spdlog/i.test(content)) {
+    frameworks.push({ name: 'spdlog', category: 'other', version: null, ecosystem: 'C++' });
+  }
+
+  const cmakeMin = content.match(/cmake_minimum_required\s*\(\s*VERSION\s+([\d.]+)/i)?.[1] ?? null;
+  const cxxStd = content.match(/CMAKE_CXX_STANDARD\s+(\d+)/)?.[1];
+  const runtime = [
+    cmakeMin ? `CMake ≥${cmakeMin}` : 'CMake',
+    cxxStd ? `C++${cxxStd}` : null,
+  ]
+    .filter(Boolean)
+    .join('  ·  ');
+
+  return { frameworks, runtime, ecosystem: 'C++' };
+}
+
 export async function detectFrameworks(rootDir: string): Promise<FrameworkReport> {
   // Try each ecosystem in priority order; use the first one that produces results
   const result =
     (await fromPackageJson(rootDir)) ??
     (await fromGoMod(rootDir)) ??
     (await fromCargoToml(rootDir)) ??
-    (await fromPythonManifests(rootDir));
+    (await fromPythonManifests(rootDir)) ??
+    (await fromCMake(rootDir));
 
   if (!result || result.frameworks.length === 0) {
     return {

@@ -29,9 +29,10 @@ const NODE_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
 
 const GO_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
   [['main.go'], 'main package', 'main'],
-  [['internal/server', 'pkg/server', 'server/server.go'], 'server package', 'server'],
-  [['internal/api', 'pkg/api', 'api/api.go'], 'API handler', 'server'],
-  [['internal/handler', 'pkg/handler'], 'HTTP handlers', 'server'],
+  [['server/server.go', 'internal/server/server.go', 'pkg/server/server.go'], 'server entry', 'server'],
+  [['api/api.go', 'internal/api/api.go', 'pkg/api/api.go'], 'API handler', 'server'],
+  [['internal/handler/handler.go', 'pkg/handler/handler.go', 'handler/handler.go'], 'HTTP handlers', 'server'],
+  [['internal/routes/routes.go', 'pkg/routes/routes.go'], 'route definitions', 'server'],
 ];
 
 const RUST_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
@@ -46,6 +47,13 @@ const PYTHON_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
   [['manage.py'], 'Django management CLI', 'cli'],
   [['src/main.py', 'src/__main__.py', '__main__.py'], 'module entry', 'main'],
   [['api/main.py', 'app/main.py'], 'API entry', 'server'],
+];
+
+const CPP_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
+  [['src/main.cpp', 'main.cpp'], 'application entry', 'main'],
+  [['src/main.c', 'main.c'], 'application entry', 'main'],
+  [['include/app.h', 'include/main.h', 'include/core.h'], 'public interface header', 'config'],
+  [['CMakeLists.txt'], 'CMake build config', 'config'],
 ];
 
 const SHARED_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
@@ -146,6 +154,8 @@ export async function detectEntryPoints(
     entries.push(...(await scanCandidates(rootDir, RUST_CANDIDATES, seen)));
   } else if (ecosystem === 'Python') {
     entries.push(...(await scanCandidates(rootDir, PYTHON_CANDIDATES, seen)));
+  } else if (ecosystem === 'C++' || ecosystem === 'C') {
+    entries.push(...(await scanCandidates(rootDir, CPP_CANDIDATES, seen)));
   }
 
   // Always add shared infrastructure entries (Docker, Makefile)

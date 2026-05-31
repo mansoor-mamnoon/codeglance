@@ -224,6 +224,20 @@ async function fromPython(rootDir: string): Promise<RunCommand[]> {
   return commands;
 }
 
+async function fromCMake(rootDir: string): Promise<RunCommand[]> {
+  if (!(await exists(path.join(rootDir, 'CMakeLists.txt')))) return [];
+
+  // Try Makefile wrapper first (common pattern: cmake via Makefile)
+  const makeCommands = await fromMakefile(rootDir);
+  if (makeCommands.length > 0) return makeCommands;
+
+  return [
+    { command: 'cmake -B build',         description: 'configure build system', kind: 'build', source: 'CMakeLists.txt' },
+    { command: 'cmake --build build',    description: 'compile project',         kind: 'build', source: 'CMakeLists.txt' },
+    { command: 'ctest --test-dir build', description: 'run test suite',          kind: 'test',  source: 'CMakeLists.txt' },
+  ];
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -249,6 +263,8 @@ export async function detectScripts(rootDir: string, ecosystem: string): Promise
     commands = await fromCargoToml(rootDir);
   } else if (ecosystem === 'Python') {
     commands = await fromPython(rootDir);
+  } else if (ecosystem === 'C++' || ecosystem === 'C') {
+    commands = await fromCMake(rootDir);
   }
 
   // Always append Makefile commands when present (common in Go/C/mixed repos)

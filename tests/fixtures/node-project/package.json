@@ -1,26 +1,47 @@
 {
-  "name": "my-nextjs-app",
-  "version": "1.0.0",
-  "dependencies": {
-    "next": "^14.2.0",
-    "react": "^18.3.0",
-    "react-dom": "^18.3.0",
-    "@prisma/client": "^5.14.0",
-    "tailwindcss": "^3.4.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.4.0",
-    "vitest": "^1.5.0",
-    "@testing-library/react": "^15.0.0",
-    "eslint": "^8.57.0",
-    "prettier": "^3.2.0"
-  },
+  "name": "my-saas-app",
+  "version": "0.1.0",
+  "private": true,
+  "engines": { "node": ">=18" },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "test": "vitest run",
-    "lint": "eslint ."
+    "test:e2e": "playwright test",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio"
   },
-  "engines": { "node": ">=18" }
+  "dependencies": {
+    "next": "^14.2.3",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@prisma/client": "^5.14.0",
+    "tailwindcss": "^3.4.4",
+    "@trpc/server": "^11.0.0-rc.430",
+    "@trpc/client": "^11.0.0-rc.430",
+    "@trpc/react-query": "^11.0.0-rc.430",
+    "next-auth": "^5.0.0-beta.19",
+    "@tanstack/react-query": "^5.45.1",
+    "zod": "^3.23.8",
+    "superjson": "^2.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2",
+    "prisma": "^5.14.0",
+    "vitest": "^1.6.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@playwright/test": "^1.45.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.3",
+    "prettier": "^3.3.2",
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0"
+  }
 }
