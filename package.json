@@ -7,7 +7,7 @@
     "node": ">=18.0.0"
   },
   "bin": {
-    "codeglance": "./dist/index.js"
+    "codeglance": "dist/index.js"
   },
   "files": [
     "dist",

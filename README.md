@@ -8,7 +8,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Node.js ≥18](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org)
-[![npm — pending](https://img.shields.io/badge/npm-pending-lightgrey)](https://www.npmjs.com/package/codeglance)
+[![npm](https://img.shields.io/npm/v/codeglance.svg)](https://www.npmjs.com/package/codeglance)
 
 </div>
 
@@ -214,8 +214,6 @@ codeglance --for-ai | xclip     # Linux
 npx codeglance                        # zero install, works immediately
 npm install -g codeglance             # install globally
 ```
-
-> **Note:** The npm package is not yet published. Clone the repo and run `node dist/index.js` until then.
 
 ---
 
