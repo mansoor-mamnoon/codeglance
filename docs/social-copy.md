@@ -59,7 +59,7 @@ Open source, MIT licensed, easy to extend.
 Each ecosystem is one self-contained detector module. 
 Adding support for your stack is ~10 lines + a test.
 
-https://github.com/username/codeglance
+https://github.com/mansoor-mamnoon/codeglance
 
 Would love your ⭐ and feedback.
 ```
@@ -89,7 +89,7 @@ Claude or ChatGPT to orient it about a codebase. No more manually writing "this 
 
 Supports Node.js, Go, Rust, and Python out of the box. Open source (MIT), no API keys, works offline.
 
-https://github.com/username/codeglance
+https://github.com/mansoor-mamnoon/codeglance
 
 Built for developers who work across multiple repos, join new teams, or evaluate open-source 
 dependencies. If that's you, give it a try and let me know what you think.
@@ -155,7 +155,7 @@ Also has `--for-ai` mode that generates a compact LLM context brief.
 
 Supports Node.js (50+ frameworks), Go, Rust, and Python. Zero config, works offline, MIT licensed.
 
-GitHub: https://github.com/username/codeglance
+GitHub: https://github.com/mansoor-mamnoon/codeglance
 
 Feedback welcome, especially from people who work on Go/Rust/Python — the Node.js detection 
 is more thorough right now and I want to improve the others.

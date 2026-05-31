@@ -29,7 +29,21 @@ export interface AnalysisResult {
   git: GitReport;
 }
 
-export async function analyze(inputPath: string): Promise<AnalysisResult> {
+export interface AnalyzeOptions {
+  /** Skip git analysis (faster on large repos or when git is unavailable) */
+  skipGit?: boolean;
+}
+
+const EMPTY_GIT: GitReport = {
+  isRepo: false,
+  branch: null,
+  lastCommit: null,
+  recentCommits: 0,
+  recentContributors: 0,
+  repoAgeDays: null,
+};
+
+export async function analyze(inputPath: string, options: AnalyzeOptions = {}): Promise<AnalysisResult> {
   const rootDir = path.resolve(inputPath);
   const name = path.basename(rootDir);
   const start = Date.now();
@@ -45,7 +59,7 @@ export async function analyze(inputPath: string): Promise<AnalysisResult> {
     detectScripts(rootDir, ecosystem),
     detectEntryPoints(rootDir, ecosystem),
     detectTools(rootDir, ecosystem),
-    detectGit(rootDir),
+    options.skipGit ? Promise.resolve(EMPTY_GIT) : detectGit(rootDir),
   ]);
 
   // Step 3: Derive stats from the scanned file list (pure computation, fast)

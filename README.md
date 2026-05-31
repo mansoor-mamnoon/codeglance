@@ -6,9 +6,9 @@
 
 *Open a repo. Run one command. Know where to start.*
 
-[![npm version](https://img.shields.io/badge/npm-v0.1.0-blue)](https://www.npmjs.com/package/codeglance)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Node.js ≥18](https://img.shields.io/badge/node-%3E%3D18-brightgreen.svg)](https://nodejs.org)
+[![npm — pending](https://img.shields.io/badge/npm-pending-lightgrey)](https://www.npmjs.com/package/codeglance)
 
 </div>
 
@@ -23,8 +23,20 @@ No install. No config. No API keys.
 ---
 
 <div align="center">
-<img src="docs/demo.svg" alt="codeglance terminal output showing Next.js project analysis" width="820"/>
+<img src="docs/demo.svg" alt="codeglance terminal output: Next.js project with framework detection, run commands, and start-here files" width="820"/>
 </div>
+
+---
+
+## Try it now
+
+```bash
+npx codeglance                                        # tour of current directory
+npx codeglance --for-ai                               # compact LLM context brief
+npx codeglance --markdown --output docs/codebase-tour.md  # save as Markdown
+```
+
+No install required. Works on any directory.
 
 ---
 
@@ -33,119 +45,139 @@ No install. No config. No API keys.
 - **Joining a new codebase** — Skip the 15-minute ritual of reading README, exploring directories, and parsing package.json manually
 - **Evaluating a dependency** — Understand what a library actually uses before you adopt it
 - **Returning to an old project** — Re-orient yourself after months away
-- **Before asking Claude or Cursor** — Run `codeglance --for-ai` to generate a structured context brief instead of dumping the entire codebase
+- **Before using Claude, Cursor, or Copilot** — Run `codeglance --for-ai` to generate a structured context brief instead of dumping the whole codebase
 - **Onboarding your team** — `codeglance --markdown > docs/codebase-tour.md` creates a living onboarding document
 
 ---
 
-## What it shows you
+## What makes this different?
 
-| Question | What you get |
-|----------|-------------|
-| **What is this?** | "Next.js 14 with Prisma, tRPC" — not just "TypeScript" |
-| **How do I run it?** | Real commands extracted from `package.json`, `Makefile`, `Cargo.toml`, `go.mod` |
-| **Where do I start?** | Entry points and key files ranked by heuristic importance |
-| **What tools does it use?** | CI system, test runner, Docker, linting, env files |
-| **How do I brief an LLM?** | `--for-ai` generates a compact, structured context brief |
+**Not a line counter.** tokei and scc count lines of code. They don't tell you what framework you're looking at or how to run it.
+
+**Not a source-code dumper.** repomix and code2prompt pack source for LLM consumption. codeglance produces a context *brief* — just the orientation layer.
+
+**Not an AI agent.** No generation, no inference, no API calls. It reads manifest files and file structure, then reports what it finds.
+
+**A repo orientation layer.** It answers five questions in one command: what is this, how do I run it, where do I start, what tools does it use, and how do I hand it off to an LLM.
 
 ---
 
-## Real examples
+## Real-world examples
 
-The following output comes from running codeglance on three projects on this machine.
+All outputs below were captured by running codeglance against the actual repos.
 
-### Electron + TypeScript app (edge-deployer)
+### charmbracelet/glow — Go CLI (15k⭐)
 
 ```
-  codeglance  edge-deployer · Node.js
+  codeglance  glow · Go
+  charmbracelet/glow
 
 ── WHAT IS THIS ──────────────────────────────────────────────────────
-  React 19
-  Pkg manager npm
-  Frameworks  Electron 36
-  Testing      Jest 29
-  Build        Webpack 5  ·  TypeScript 5
+  CLI tool (Go) using Cobra
+  Runtime     Go 1.25.9
+  Other        Viper 1.21.0
 
 ── HOW TO RUN IT ─────────────────────────────────────────────────────
-  npm run dev      start development server
-  npm run build    build for production
-  npm run test     run test suite
+  go run .         run main package
+  go build ./...   compile all packages
+  go test ./...    run test suite
+  go vet ./...     run static analysis
 
 ── WHERE TO START ────────────────────────────────────────────────────
-  src/index.tsx                       main entry
-  electron/main.ts                    Electron main process
-  src/lib/securityScanner.ts          lib module
-  src/cloudDeployers/awsDeployer.ts   AWS deployer
+  main.go           main package
+  Dockerfile        container definition
+  config_cmd.go     cmd configuration
+  github.go         github
+  ui/markdown.go    markdown (ui/)
 
 ── TOOLS DETECTED ────────────────────────────────────────────────────
-  Testing      Jest  (src/__tests__/)
-  CI/CD        GitHub Actions (2 workflows)
+  CI/CD        GitHub Actions (6 workflows)
+  Container    Docker
+  Linting      golangci-lint
 
 ── CODEBASE ──────────────────────────────────────────────────────────
-  TypeScript    57 files   8.4k lines  73%
-  JavaScript     9 files     725 lines   6%
-  104 files  ·  12k lines  ·  8 languages  ·  0.05s
+  Go    25 files  3.6k lines  ███████████████░░░  86%
+  45 files  ·  4.2k lines  ·  4 languages
 ```
 
-### Python FastAPI service (openlake)
+### expressjs/express — Node.js web framework (65k⭐)
 
 ```
-  codeglance  openlake · Python
+  codeglance  express · Node.js
+  expressjs/express
 
 ── WHAT IS THIS ──────────────────────────────────────────────────────
-  FastAPI
-  Runtime     Python >=3.11
+  Node.js project — ESLint
+  Runtime     Node.js >= 18
+  Pkg manager npm
+  Linting      ESLint 8
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  npm run test       run test suite
+  npm run lint       lint codebase
+
+── WHERE TO START ────────────────────────────────────────────────────
+  lib/express.js       express
+  lib/utils.js         utilities
+  lib/view.js          view/template layer
+  lib/application.js   app bootstrap
+  lib/request.js       request object
+  lib/response.js      response object
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  Testing      (test/)
+  CI/CD        GitHub Actions (4 workflows)
+  Linting      ESLint
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  JavaScript    141 files  21k lines  ███████████████░░░  82%
+  213 files  ·  26k lines  ·  6 languages
+```
+
+### pallets/flask — Python web framework (68k⭐)
+
+```
+  codeglance  flask · Python
+  pallets/flask
+
+── WHAT IS THIS ──────────────────────────────────────────────────────
+  CLI tool (Python) using Click
+  Runtime     Python >=3.10
 
 ── HOW TO RUN IT ─────────────────────────────────────────────────────
   pytest         run test suite
   ruff check .   lint with Ruff
 
 ── WHERE TO START ────────────────────────────────────────────────────
-  docker-compose.yml   compose services
-  src/main.py          module entry
-  ui/app/page.tsx      frontend route
+  src/flask/app.py            flask entry
+  src/flask/blueprints.py     route blueprints
+  src/flask/config.py         configuration
+  src/flask/globals.py        global request context
+  src/flask/logging.py        logging setup
+  src/flask/sessions.py       session management
 
 ── TOOLS DETECTED ────────────────────────────────────────────────────
-  Testing      Pytest  (tests/)
-  Container    docker-compose
+  Testing      (tests/)
+  CI/CD        GitHub Actions (5 workflows)
   Linting      Ruff  ·  mypy
-  Env files    .env.example
-```
-
-### Python + C++ hybrid (limit-order-book)
-
-```
-  codeglance  limit-order-book · Python
-
-── WHAT IS THIS ──────────────────────────────────────────────────────
-  aiohttp with Pandas
-  Runtime     Python >=3.9
-  Frameworks  Click  ·  Typer
-
-── WHERE TO START ────────────────────────────────────────────────────
-  app.py               app entry
-  cpp/src/bench.cpp    C++ benchmark core
-  cpp/src/book_core.cpp  order book engine
 
 ── CODEBASE ──────────────────────────────────────────────────────────
-  C++       29 files   17k lines  65%
-  Python    38 files    7.2k lines  27%
-  136 files  ·  26k lines  ·  0.09s
+  Python    83 files  18k lines  ██████████░░░░░░░░  53%
+  233 files  ·  35k lines  ·  10 languages
 ```
 
 ---
 
 ## The `--for-ai` mode
 
-Run `codeglance --for-ai` to get a compact, structured context brief you can paste into Claude, GPT, or Gemini. About 400 tokens. No source code dumped.
+Run `codeglance --for-ai` to get a compact, structured LLM context brief. Paste it into Claude, GPT, or Gemini before asking about the codebase. Typically under 300 tokens. No source code.
 
 ```markdown
 # Codebase Context: my-saas-app
 
 ## Stack
 Next.js 14 with Prisma, tRPC
-Runtime: Node.js >=18
-Package manager: pnpm
+Runtime: Node.js >=18 · Package manager: pnpm
 
 ## Commands
 - **dev:** `pnpm dev`
@@ -162,16 +194,16 @@ Package manager: pnpm
 ## Libraries
 Prisma, Auth.js, tRPC, Vitest, Playwright
 
-## Testing
-Uses Vitest, Playwright. Tests in `tests/`.
-
 ## Infrastructure
-GitHub Actions (1 workflows)  ·  docker-compose
+GitHub Actions (1 workflows) · docker-compose
+
+---
+*Generated by codeglance. Heuristic — not exhaustive.*
 ```
 
 ```bash
-codeglance --for-ai | pbcopy   # macOS — paste into Claude/GPT
-codeglance --for-ai | xclip    # Linux
+codeglance --for-ai | pbcopy    # macOS
+codeglance --for-ai | xclip     # Linux
 ```
 
 ---
@@ -179,46 +211,44 @@ codeglance --for-ai | xclip    # Linux
 ## Install
 
 ```bash
-npx codeglance                   # zero install
-npm install -g codeglance        # install globally
+npx codeglance                        # zero install, works immediately
+npm install -g codeglance             # install globally
 ```
+
+> **Note:** The npm package is not yet published. Clone the repo and run `node dist/index.js` until then.
 
 ---
 
 ## Usage
 
 ```bash
-codeglance [path]                        # analyze current dir or a path
-codeglance --for-ai                      # compact LLM context brief
-codeglance --markdown                    # Markdown report
-codeglance --json                        # machine-readable output
-codeglance --output docs/tour.md         # save to file
-codeglance --no-git                      # skip git analysis
+codeglance [path]                     # analyze current dir or a path
+codeglance --for-ai                   # compact LLM context brief
+codeglance --markdown                 # Markdown report
+codeglance --json                     # machine-readable output
+codeglance --output docs/tour.md      # save to file
+codeglance --no-git                   # skip git analysis (faster on large repos)
 ```
 
-### Generate a living onboarding doc
+### Generate a living onboarding document
 
 ```bash
 codeglance --markdown --output docs/codebase-tour.md
 ```
 
-Check it in. Regenerate whenever the architecture changes.
-[See an example →](docs/codebase-tour.md)
+Check it in. Regenerate when the architecture changes. [See the generated output for this repo →](docs/codebase-tour.md)
 
 ---
 
 ## Supported ecosystems
 
-| Ecosystem | Manifest | What's detected |
-|-----------|----------|-----------------|
+| Ecosystem | Manifest | What gets detected |
+|-----------|----------|--------------------|
 | **Node.js** | `package.json` | Next.js, React, Vue, Angular, Svelte, Express, NestJS, Fastify, Prisma, Drizzle, tRPC, GraphQL, Vitest, Jest, Playwright, ESLint, Tailwind — 50+ packages |
-| **Python** | `pyproject.toml`, `requirements.txt` | FastAPI, Django, Flask, SQLAlchemy, Pydantic, Pytest, Ruff, Black, PyTorch, LangChain, OpenAI SDK |
+| **Python** | `pyproject.toml`, `requirements.txt` | FastAPI, Django, Flask, SQLAlchemy, Pydantic, Pytest, Ruff, Black, PyTorch, LangChain, Anthropic SDK |
 | **Go** | `go.mod` | Gin, Echo, Fiber, Chi, GORM, Cobra, gRPC, Zap |
 | **Rust** | `Cargo.toml` | Axum, Actix-web, Rocket, Tokio, SQLx, Clap, Serde, Tracing |
-| **C/C++** | `CMakeLists.txt` | GoogleTest, Catch2, Boost, Qt, OpenCV — CMake version, C++ standard |
-| **Ruby** | `Gemfile` | Rails, Sinatra, RSpec *(basic)* |
-
-Missing your ecosystem? [Adding a detector takes ~10 minutes →](#contributing)
+| **C/C++** | `CMakeLists.txt` | GoogleTest, Catch2, Boost, Qt, OpenCV; CMake version and C++ standard |
 
 ---
 
@@ -226,9 +256,9 @@ Missing your ecosystem? [Adding a detector takes ~10 minutes →](#contributing)
 
 Use the right tool for the job:
 
-- **tokei / scc** — fast, accurate line-of-code counts. Use these when you want LOC data.
-- **repomix / code2prompt** — pack your source code *for* LLM consumption. Use these when you need to feed a full codebase to an LLM.
-- **codeglance** — understand a repo before you work with it. Use this when you need orientation.
+- **tokei / scc** — accurate LOC counts by language. Best when you need raw code size data.
+- **repomix / code2prompt** — pack source code into a file for LLM consumption. Best when you need to feed a full codebase to a model.
+- **codeglance** — repo orientation. Best when you need to understand a repo before you start working with it.
 
 | | codeglance | tokei/scc | repomix |
 |---|:---:|:---:|:---:|
@@ -238,29 +268,29 @@ Use the right tool for the job:
 | "Files to read first" | ✓ | ✗ | ✗ |
 | CI / Docker / tooling | ✓ | ✗ | ✗ |
 | Language stats | ✓ | ✓ | ✗ |
-| LLM context brief | ✓ | ✗ | ✓ (source dump) |
+| LLM context brief | ✓ | ✗ | ✓ (full source) |
 | Zero config | ✓ | ✓ | ✓ |
 
 ---
 
 ## Limitations
 
-codeglance is transparent about what it is:
+codeglance is transparent about what it is and what it is not:
 
-- **Heuristic, not semantic.** It reads manifest files and file structure. It does not parse or understand source code.
-- **Framework detection depends on manifests.** Projects without a standard package file produce shallow output.
+- **Heuristic, not semantic.** It reads manifest files and file structure. It does not parse source code or understand logic.
+- **Framework detection depends on manifests.** Projects without a standard package file (go.mod, package.json, Cargo.toml, pyproject.toml, CMakeLists.txt) produce shallow output.
+- **Mixed-ecosystem repos** (a Python backend + Node.js frontend) are analyzed from the first detected ecosystem. The other ecosystem's files still appear in language stats and WHERE TO START.
+- **Library repos** that are a framework themselves (e.g., fastapi, gin-gonic/gin) show their own dependencies, not their framework name.
+- **Java, Ruby, and PHP are not yet supported.** `.java`, `.rb`, and `.php` files are counted in language stats, but manifest files (pom.xml, Gemfile, composer.json) are not parsed and no framework names are detected. See [Contributing](#contributing) to add support.
+- **Monorepos** get a single summary, not per-package analysis.
+- **Large repos** are capped at 25,000 files. A note appears in the output.
 - **"Start here" ranking is approximate.** Based on file depth, naming patterns, and size — not import graph analysis.
-- **Large repos are capped.** Repos over 25,000 files are analyzed up to that cap (shown in output).
-- **Java support is limited.** `pom.xml` / `build.gradle` presence is detected; framework names are not yet extracted.
-- **Monorepos get a single summary.** Per-package analysis is on the [roadmap](ROADMAP.md).
-
-The output always says "heuristic" where it applies. It does not claim to replace static analysis tools.
 
 ---
 
 ## Contributing
 
-Each ecosystem is a self-contained detector module. **Adding a framework detector is ~3 lines:**
+Each ecosystem detector is a self-contained module. **Adding a framework takes ~3 lines:**
 
 ```typescript
 // src/detectors/frameworks.ts — add to the relevant array:
@@ -270,15 +300,16 @@ const NODE_FRAMEWORKS: FrameworkDef[] = [
 ];
 ```
 
-Add a fixture + test, run `npm test`, submit a PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Add a fixture + test, run `npm test`, submit a PR. Full guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 
-**Good first issues:**
-- Add Laravel / Symfony detector
-- Add Phoenix / Elixir detector
-- Add Spring Boot / Quarkus improvements
-- Add pnpm workspace monorepo detection
-- Improve `--for-ai` Python command inference
-- Add Bun lockfile detection
+**Open contributions:**
+- Java/Spring Boot detector (pom.xml, build.gradle)
+- Ruby/Rails detector (Gemfile)
+- PHP/Laravel/Symfony detector (composer.json)
+- Elixir/Phoenix detector (mix.exs)
+- pnpm workspace monorepo detection
+- Python dev server command inference (e.g., `uvicorn` for FastAPI)
+- Improve Rust "start here" ranking with workspace support
 
 ---
 

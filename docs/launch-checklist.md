@@ -19,27 +19,50 @@ Work through this before posting to HN, Reddit, or any community.
 
 ## npm package
 
-- [ ] Package name `codeglance` is available: `npm info codeglance` → not found
-- [ ] `npm pack` produces a clean tarball (check with `tar -tvf codeglance-0.1.0.tgz`)
-- [ ] `npx codeglance` works on a fresh machine with no prior install
+- [ ] Package name `codeglance` is available: `npm info codeglance` → should 404
+- [ ] `npm pack` produces a clean tarball: `npm pack && tar -tvf codeglance-0.1.0.tgz`
+- [ ] Tarball only contains `dist/`, `README.md`, `LICENSE` (no source, no node_modules)
 - [ ] Version in package.json matches CHANGELOG
-- [ ] `files` field in package.json includes only `dist/`, `README.md`, `LICENSE`
+- [ ] `files` field in package.json: `["dist", "README.md", "LICENSE"]`
+- [ ] `npm publish --dry-run` to verify what would be published
 
-## Install test (do this on a clean machine or in a temp directory)
+## Install verification (run every step)
 
 ```bash
-cd /tmp
-git clone https://github.com/your-username/codeglance test-install
-cd test-install
-npx codeglance .
+# 1. Pack and install locally
+npm pack
+npm install -g ./codeglance-0.1.0.tgz
+
+# 2. Verify the global install
+codeglance --help
+codeglance --version
+
+# 3. Run on current directory
+codeglance .
+
+# 4. Run all output modes
+codeglance --for-ai
+codeglance --markdown --output /tmp/tour.md && cat /tmp/tour.md
+codeglance --json | python3 -m json.tool | head -20
+codeglance --no-git .
+
+# 5. Uninstall and test npx
+npm uninstall -g codeglance
+npx codeglance@latest .
 ```
 
-Expected: framework detection output, no errors.
+Each step must work without errors.
+
+## Test on well-known repos (after npm publish)
 
 ```bash
-# Also test on a real popular repo:
-git clone https://github.com/vercel/next.js /tmp/nextjs-test
-npx codeglance /tmp/nextjs-test
+git clone --depth 1 https://github.com/charmbracelet/glow /tmp/glow-test
+npx codeglance /tmp/glow-test
+# Expected: "CLI tool (Go) using Cobra", Cobra detected, golangci-lint
+
+git clone --depth 1 https://github.com/tiangolo/full-stack-fastapi-template /tmp/fapi-test
+npx codeglance /tmp/fapi-test
+# Expected: TypeScript + Python mixed repo, 14 workflows detected
 ```
 
 ## README claim verification
@@ -78,7 +101,7 @@ Sleep 3s
 
 - [ ] Repository is public
 - [ ] Description set: "The 10-second codebase tour. Understand any repo in one command."
-- [ ] Topics added: `cli`, `developer-tools`, `codebase-analysis`, `onboarding`, `typescript`, `static-analysis`, `llm`, `repo-analyzer`, `nodejs`, `open-source`
+- [ ] Topics added: `cli`, `developer-tools`, `codebase-analysis`, `repo-analyzer`, `onboarding`, `llm`, `typescript`, `static-analysis`, `terminal`, `productivity`
 - [ ] Homepage URL set to npm package page (once published)
 - [ ] GitHub Actions CI badge URL updated in README to reflect real repo
 - [ ] Issue templates are live (verify by opening a new issue)

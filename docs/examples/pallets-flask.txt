@@ -1,0 +1,58 @@
+
+  codeglance  flask · Python
+  pallets/flask
+
+── WHAT IS THIS ──────────────────────────────────────────────────────
+  CLI tool (Python) using Click
+  Runtime     Python >=3.10
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  pytest         run test suite
+  ruff check .   lint with Ruff
+
+── WHERE TO START ────────────────────────────────────────────────────
+  src/flask/app.py            flask entry
+  src/flask/sansio/app.py     sansio entry
+  src/flask/blueprints.py     route blueprints
+  src/flask/config.py         configuration
+  src/flask/debughelpers.py   debughelpers (flask/)
+  src/flask/globals.py        global request context
+  src/flask/logging.py        logging setup
+  src/flask/sessions.py       session management
+  (ranked by heuristics — not semantic analysis)
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  Testing      (tests/)
+  CI/CD        GitHub Actions (5 workflows)
+  Linting      Ruff  ·  mypy
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  Python                83     18k lines  ██████████░░░░░░░░  53%
+  HTML                  20     382 lines  ░░░░░░░░░░░░░░░░░░   1%
+  ────────────────────────────────────────────────────────────────────
+  reStructuredText      79     15k lines
+  TOML                   5     374 lines
+  YAML                   8     254 lines
+  233 files  ·  35k lines  ·  10 languages
+
+── GIT ───────────────────────────────────────────────────────────────
+  Branch  main  ·  first commit 12 days ago
+  Last commit  12 days ago  David Lord: "update dev dependencies"  954f568
+  Activity    1 commits  1 contributors  (last 30 days)
+
+── HEALTH ────────────────────────────────────────────────────────────
+  ✓  Tests          tests/
+  ✓  CI/CD          GitHub Actions
+  ✓  README         README.md present
+  ✓  License        LICENSE present
+  ○  Changelog      no CHANGELOG.md
+  ○  Contributing   no CONTRIBUTING.md
+
+
+──────────────────────────────────────────────────────────────────────
+  Analyzed 233 files in 68ms
+
+  codeglance --markdown  save this as codebase-tour.md
+  codeglance --for-ai    generate a compact LLM context brief
+  codeglance --json      machine-readable output
+

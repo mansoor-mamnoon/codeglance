@@ -1,0 +1,58 @@
+
+  codeglance  glow · Go
+  charmbracelet/glow
+
+── WHAT IS THIS ──────────────────────────────────────────────────────
+  CLI tool (Go) using Cobra
+  Runtime     Go 1.25.9
+  Other        Viper 1.21.0
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  go run .         run main package
+  go build ./...   compile all packages
+  go test ./...    run test suite
+  go vet ./...     run static analysis
+
+── WHERE TO START ────────────────────────────────────────────────────
+  main.go           main package
+  Dockerfile        container definition
+  config_cmd.go     cmd configuration
+  github.go         github
+  gitlab.go         gitlab
+  url.go            url
+  ui/markdown.go    markdown (ui/)
+  ui/stashhelp.go   stashhelp (ui/)
+  (ranked by heuristics — not semantic analysis)
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  CI/CD        GitHub Actions (6 workflows)
+  Container    Docker
+  Linting      golangci-lint
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  Go            25    3.6k lines  ███████████████░░░  86%
+  ────────────────────────────────────────────────────────────────────
+  Markdown       3     303 lines
+  YAML          11     276 lines
+  45 files  ·  4.2k lines  ·  4 languages
+
+── GIT ───────────────────────────────────────────────────────────────
+  Branch  master  ·  first commit 1 months ago
+  Last commit  1 months ago  Andrey Nering: "chore: remove CODEOWNERS"  5378827
+
+── HEALTH ────────────────────────────────────────────────────────────
+  ○  Tests          no test directory found
+  ✓  CI/CD          GitHub Actions
+  ✓  README         README.md present
+  ✓  License        LICENSE present
+  ○  Changelog      no CHANGELOG.md
+  ○  Contributing   no CONTRIBUTING.md
+
+
+──────────────────────────────────────────────────────────────────────
+  Analyzed 45 files in 89ms
+
+  codeglance --markdown  save this as codebase-tour.md
+  codeglance --for-ai    generate a compact LLM context brief
+  codeglance --json      machine-readable output
+

@@ -26,7 +26,7 @@ You're piecing together the same questions every time:
 
 It takes 10–15 minutes. For every unfamiliar repo.
 
-I built [codeglance](https://github.com/username/codeglance) to answer these questions in one command.
+I built [codeglance](https://github.com/mansoor-mamnoon/codeglance) to answer these questions in one command.
 
 ## What codeglance does
 
@@ -111,7 +111,7 @@ The contribution path is intentional: "good first issue: add a detector for X" i
 npx codeglance
 ```
 
-Zero install. Works on any repo. The source is at [github.com/username/codeglance](https://github.com/username/codeglance).
+Zero install. Works on any repo. The source is at [github.com/mansoor-mamnoon/codeglance](https://github.com/mansoor-mamnoon/codeglance).
 
 If you work across many repos, onboard new developers, or use AI coding assistants, I think you'll find it useful. And if your favorite ecosystem isn't well-supported yet, opening a PR is genuinely easy — the CONTRIBUTING guide walks through exactly what to add.
 

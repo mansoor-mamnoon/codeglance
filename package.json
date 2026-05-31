@@ -27,26 +27,26 @@
     "prepublishOnly": "npm run typecheck && npm run test && npm run build"
   },
   "keywords": [
-    "codebase",
-    "analysis",
     "cli",
     "developer-tools",
-    "code-stats",
-    "project-overview",
-    "repository",
-    "git",
-    "languages",
-    "neofetch"
+    "codebase-analysis",
+    "repo-analyzer",
+    "onboarding",
+    "llm",
+    "typescript",
+    "static-analysis",
+    "terminal",
+    "productivity"
   ],
-  "author": "",
+  "author": "Mansoor Mamnoon",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/username/codeglance.git"
+    "url": "git+https://github.com/mansoor-mamnoon/codeglance.git"
   },
-  "homepage": "https://github.com/username/codeglance#readme",
+  "homepage": "https://github.com/mansoor-mamnoon/codeglance#readme",
   "bugs": {
-    "url": "https://github.com/username/codeglance/issues"
+    "url": "https://github.com/mansoor-mamnoon/codeglance/issues"
   },
   "dependencies": {
     "chalk": "^5.3.0",

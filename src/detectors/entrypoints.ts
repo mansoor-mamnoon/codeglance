@@ -42,11 +42,13 @@ const RUST_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
 ];
 
 const PYTHON_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
-  [['main.py'], 'main entry', 'main'],
-  [['app.py'], 'app entry', 'main'],
+  [['main.py'], 'app entry point', 'main'],
+  [['app.py'], 'application factory', 'main'],
   [['manage.py'], 'Django management CLI', 'cli'],
-  [['src/main.py', 'src/__main__.py', '__main__.py'], 'module entry', 'main'],
-  [['api/main.py', 'app/main.py'], 'API entry', 'server'],
+  [['wsgi.py'], 'WSGI server entry', 'server'],
+  [['asgi.py'], 'ASGI server entry', 'server'],
+  [['src/main.py', 'src/__main__.py', '__main__.py'], 'module entry point', 'main'],
+  [['api/main.py', 'app/main.py', 'src/app/main.py'], 'API entry point', 'server'],
 ];
 
 const CPP_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [

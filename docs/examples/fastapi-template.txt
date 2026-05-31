@@ -1,0 +1,57 @@
+
+  codeglance  fastapi-template · Node.js
+  tiangolo/full-stack-fastapi-template
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  npm run dev       start development server
+  npm run test      run test suite
+  npm run test:ui   test:ui
+  npm run lint      lint codebase
+
+── WHERE TO START ────────────────────────────────────────────────────
+  frontend/src/main.tsx                      main entry
+  backend/app/main.py                        main entry
+  backend/app/api/main.py                    main entry
+  frontend/src/routes/_layout/index.tsx      _layout entry
+  frontend/src/routes/_layout/settings.tsx   configuration
+  frontend/playwright.config.ts              playwright.config (frontend/)
+  backend/app/crud.py                        crud
+  backend/app/models.py                      data models
+  (ranked by heuristics — not semantic analysis)
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  CI/CD        GitHub Actions (14 workflows)
+  Env files    .env
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  TypeScript      95    9.8k lines  ██████████░░░░░░░░  58%
+  Python          46    2.9k lines  ███░░░░░░░░░░░░░░░  17%
+  CSS              1     125 lines  ░░░░░░░░░░░░░░░░░░   1%
+  Shell            8      87 lines  ░░░░░░░░░░░░░░░░░░   1%
+  ────────────────────────────────────────────────────────────────────
+  Markdown         7    2.0k lines
+  YAML            21    1.4k lines
+  JSON             7     199 lines
+  222 files  ·  17k lines  ·  10 languages
+
+── GIT ───────────────────────────────────────────────────────────────
+  Branch  master  ·  first commit yesterday
+  Last commit  yesterday  github-actions[bot]: "📝 Update release notes"  38302d7
+  Activity    1 commits  1 contributors  (last 30 days)
+
+── HEALTH ────────────────────────────────────────────────────────────
+  ○  Tests          no test directory found
+  ✓  CI/CD          GitHub Actions
+  ✓  README         README.md present
+  ✓  License        LICENSE present
+  ○  Changelog      no CHANGELOG.md
+  ✓  Contributing   CONTRIBUTING.md present
+
+
+──────────────────────────────────────────────────────────────────────
+  Analyzed 222 files in 56ms
+
+  codeglance --markdown  save this as codebase-tour.md
+  codeglance --for-ai    generate a compact LLM context brief
+  codeglance --json      machine-readable output
+

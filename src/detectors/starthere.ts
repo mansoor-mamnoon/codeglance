@@ -61,6 +61,92 @@ const GENERATED_PATTERNS = [
   /test_.*\.(py)$/,
 ];
 
+// Maps filename keyword → plain English description fragment.
+// Used to turn "securityScanner.ts" into "security scanner" etc.
+const KEYWORD_DESC: Record<string, string> = {
+  handler: 'request handler',   handlers: 'request handlers',
+  router: 'route definitions',  routes: 'route definitions',  routing: 'routing',
+  controller: 'controller',     controllers: 'controllers',
+  service: 'service layer',     services: 'service layer',
+  middleware: 'HTTP middleware',
+  auth: 'authentication',       authentication: 'authentication',
+  authorization: 'authorization',
+  config: 'configuration',      settings: 'settings',
+  db: 'database client',        database: 'database layer',   store: 'data store',
+  model: 'data model',          models: 'data models',
+  schema: 'schema',             schemas: 'schemas',
+  types: 'type definitions',    interfaces: 'interfaces',
+  client: 'HTTP client',        server: 'server setup',
+  api: 'API layer',
+  util: 'utilities',            utils: 'utilities',
+  helper: 'helpers',            helpers: 'helpers',
+  scanner: 'scanner',           parser: 'parser',
+  analyzer: 'analyzer',         orchestrator: 'orchestrator',
+  cmd: 'command',               command: 'command',           commands: 'commands',
+  cli: 'CLI entry',
+  deployer: 'deployer',         deploy: 'deployment',
+  test: 'test suite',           spec: 'test spec',
+  bench: 'benchmark',           benchmark: 'benchmark',
+  query: 'query builder',       queries: 'query builder',
+  seed: 'data seed',            migration: 'migration',       migrations: 'migrations',
+  // HTTP object extensions
+  application: 'app bootstrap', request: 'request object',   response: 'response object',
+  view: 'view/template layer',  views: 'view layer',
+  // Python/Flask specific
+  blueprint: 'route blueprint', blueprints: 'route blueprints',
+  globals: 'global request context', session: 'session management', sessions: 'session management',
+  // General
+  errors: 'error types',        error: 'error handling',
+  debug: 'debug utilities',     logging: 'logging setup',
+  fs: 'filesystem helpers',     mode: 'runtime mode',
+  plugin: 'plugin system',      plugins: 'plugin system',
+  hook: 'lifecycle hooks',      hooks: 'lifecycle hooks',
+  event: 'event system',        events: 'event system',
+  cache: 'caching layer',       queue: 'task queue',
+  worker: 'background worker',  job: 'background job',        jobs: 'background jobs',
+};
+
+// Generic names that need directory context to be meaningful
+const GENERIC_NAMES = new Set(['main', 'index', 'app', 'init', 'mod', 'lib', 'core']);
+
+function deriveReason(relativePath: string, parts: string[]): string {
+  const filename = parts[parts.length - 1] ?? '';
+  const dirName = parts.length > 1 ? parts[parts.length - 2] : '';
+  const nameWithoutExt = path.basename(filename, path.extname(filename));
+
+  // Split camelCase, PascalCase, snake_case, kebab-case into words
+  const nameWords = nameWithoutExt
+    .replace(/[-_]/g, ' ')
+    .replace(/([a-z])([A-Z])/g, '$1 $2')  // camelCase → camel Case
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((w) => w.length > 1);
+
+  const isGenericName = nameWords.length === 1 && GENERIC_NAMES.has(nameWords[0] ?? '');
+
+  // For generic names (main.go, index.ts), use directory as context
+  if (isGenericName && dirName && !IMPORTANT_DIRS.has(dirName)) {
+    return `${dirName} entry`;
+  }
+
+  // Look for keyword matches in name words
+  for (const word of nameWords) {
+    const desc = KEYWORD_DESC[word];
+    if (desc) {
+      const prefix = nameWords.filter((w) => w !== word && w.length > 2).join(' ');
+      return prefix ? `${prefix} ${desc}` : desc;
+    }
+  }
+
+  // If in a meaningful directory, suffix with it
+  if (dirName && !IMPORTANT_DIRS.has(dirName) && dirName !== '.' && dirName.length < 20) {
+    return `${nameWords.join(' ')} (${dirName}/)`;
+  }
+
+  // Last resort: just the words
+  return nameWords.join(' ') || path.dirname(relativePath);
+}
+
 function scoreFile(file: ScannedFile): { score: number; reason: string } | null {
   const rel = file.relativePath;
   const basename = path.basename(rel);
@@ -99,6 +185,14 @@ function scoreFile(file: ScannedFile): { score: number; reason: string } | null 
     }
   }
 
+  // Refine generic reasons ("main entry") with directory context when meaningful
+  if (reason === 'main entry' || reason === 'application entry') {
+    const immediateDir = parts[parts.length - 2] ?? '';
+    if (immediateDir && !IMPORTANT_DIRS.has(immediateDir) && immediateDir !== '.') {
+      reason = `${immediateDir} entry`;
+    }
+  }
+
   // Directory bonus
   if (IMPORTANT_DIRS.has(parts[0] ?? '')) score += 20;
   if (IMPORTANT_DIRS.has(parts[1] ?? '')) score += 10;
@@ -107,19 +201,9 @@ function scoreFile(file: ScannedFile): { score: number; reason: string } | null 
   if (file.lines >= 50 && file.lines <= 500) score += 25;
   else if (file.lines > 500 && file.lines <= 1000) score += 10;
 
-  // If no specific reason, derive one from directory name
+  // If no specific reason, derive one from filename and directory context
   if (!reason) {
-    const dir = parts[parts.length - 2] ?? '';
-    const grandDir = parts[parts.length - 3] ?? '';
-    if (IMPORTANT_DIRS.has(dir)) {
-      // Make directory-based reasons read naturally
-      const singular = dir.endsWith('s') && dir.length > 3 ? dir.slice(0, -1) : dir;
-      reason = `${singular} module`;
-    } else if (IMPORTANT_DIRS.has(grandDir)) {
-      reason = `${grandDir}/${dir} module`;
-    } else {
-      reason = path.dirname(rel) === '.' ? 'root-level source' : `in ${path.dirname(rel)}/`;
-    }
+    reason = deriveReason(rel, parts);
   }
 
   if (score <= 0) return null;

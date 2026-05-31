@@ -6,7 +6,7 @@ ecosystem or framework detector is one of the best ways to contribute.
 ## Setup
 
 ```bash
-git clone https://github.com/username/codeglance
+git clone https://github.com/mansoor-mamnoon/codeglance
 cd codeglance
 npm install
 npm run dev -- .     # run on current directory

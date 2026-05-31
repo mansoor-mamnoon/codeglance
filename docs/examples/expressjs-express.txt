@@ -1,0 +1,61 @@
+
+  codeglance  express · Node.js
+  expressjs/express
+
+── WHAT IS THIS ──────────────────────────────────────────────────────
+  Node.js project — ESLint
+  Runtime     Node.js >= 18
+  Pkg manager npm
+  Linting      ESLint 8
+
+── HOW TO RUN IT ─────────────────────────────────────────────────────
+  npm run test       run test suite
+  npm run test-ci    test-ci
+  npm run test-cov   test-cov
+  npm run test-tap   test-tap
+  npm run lint       lint codebase
+  npm run lint:fix   lint:fix
+
+── WHERE TO START ────────────────────────────────────────────────────
+  lib/express.js       express
+  lib/utils.js         utilities
+  lib/view.js          view/template layer
+  lib/application.js   app bootstrap
+  lib/request.js       request object
+  lib/response.js      response object
+  (ranked by heuristics — not semantic analysis)
+
+── TOOLS DETECTED ────────────────────────────────────────────────────
+  Testing      (test/)
+  CI/CD        GitHub Actions (4 workflows)
+  Linting      ESLint
+
+── CODEBASE ──────────────────────────────────────────────────────────
+  JavaScript     141     21k lines  ███████████████░░░  82%
+  ────────────────────────────────────────────────────────────────────
+  Markdown         4    4.2k lines
+  YAML             6     400 lines
+  JSON             1     100 lines
+  213 files  ·  26k lines  ·  6 languages
+
+── GIT ───────────────────────────────────────────────────────────────
+  Branch  master  ·  first commit 13 days ago
+  Last commit  13 days ago  dependabot[bot]: "build(deps): bump github/codeql-action from 4.35.1 to 4…"  dae209a
+  Activity    1 commits  1 contributors  (last 30 days)
+
+── HEALTH ────────────────────────────────────────────────────────────
+  ✓  Tests          test/
+  ✓  CI/CD          GitHub Actions
+  ✓  README         README.md present
+  ✓  License        LICENSE present
+  ○  Changelog      no CHANGELOG.md
+  ○  Contributing   no CONTRIBUTING.md
+
+
+──────────────────────────────────────────────────────────────────────
+  Analyzed 213 files in 63ms
+
+  codeglance --markdown  save this as codebase-tour.md
+  codeglance --for-ai    generate a compact LLM context brief
+  codeglance --json      machine-readable output
+

@@ -64,7 +64,7 @@ program.action(async (inputPath: string, options: {
   }
 
   try {
-    const result = await analyze(resolvedPath);
+    const result = await analyze(resolvedPath, { skipGit: options.git === false });
 
     let output: string;
 
