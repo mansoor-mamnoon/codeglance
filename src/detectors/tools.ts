@@ -1,4 +1,4 @@
-import { readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { access } from 'node:fs/promises';
 import path from 'node:path';
 
@@ -10,6 +10,8 @@ export interface ToolsReport {
   linting: string[];
   hasEnvFile: boolean;
   envFiles: string[];
+  /** Env vars declared in docker-compose without a default value — must be set before running */
+  composeEnvVars: string[];
   hasReadme: boolean;
   hasChangelog: boolean;
   hasContributing: boolean;
@@ -40,6 +42,38 @@ async function countWorkflows(rootDir: string): Promise<number> {
   } catch {
     return 0;
   }
+}
+
+/**
+ * Reads docker-compose.yml and returns env var names that have no default
+ * value — i.e. they must be supplied by the host before the container runs.
+ * Handles both list form (`- VAR_NAME`) and map form (`VAR_NAME:`).
+ */
+async function detectComposeEnvVars(rootDir: string): Promise<string[]> {
+  const candidates = ['docker-compose.yml', 'docker-compose.yaml'];
+  for (const name of candidates) {
+    const filePath = path.join(rootDir, name);
+    try {
+      const content = await readFile(filePath, 'utf8');
+      const vars = new Set<string>();
+
+      // List form:  - VAR_NAME          (no = means no default)
+      // Value form: - VAR_NAME=value    (has default — skip)
+      // Ref form:   - VAR_NAME=${OTHER} (references another var — skip)
+      for (const m of content.matchAll(/^\s+-\s+([A-Z_][A-Z0-9_]*)(?:\s*$)/gm)) {
+        if (m[1]) vars.add(m[1]);
+      }
+
+      // Map form:   VAR_NAME:           (null value means "required from host")
+      // Map form:   VAR_NAME: value     (has default — skip)
+      for (const m of content.matchAll(/^\s{4,}([A-Z_][A-Z0-9_]*):\s*$/gm)) {
+        if (m[1]) vars.add(m[1]);
+      }
+
+      if (vars.size > 0) return [...vars].sort();
+    } catch { /* file absent or unreadable */ }
+  }
+  return [];
 }
 
 async function detectEnvFiles(rootDir: string): Promise<string[]> {
@@ -132,6 +166,7 @@ export async function detectTools(rootDir: string, ecosystem: string): Promise<T
     hasDocker,
     hasDockerCompose,
     envFiles,
+    composeEnvVars,
     testDir,
     hasReadme,
     hasChangelog,
@@ -150,6 +185,7 @@ export async function detectTools(rootDir: string, ecosystem: string): Promise<T
       (a) => a || fileExists(path.join(rootDir, 'docker-compose.yaml')),
     ),
     detectEnvFiles(rootDir),
+    detectComposeEnvVars(rootDir),
     detectTestDir(rootDir),
     detectReadme(rootDir),
     fileExists(path.join(rootDir, 'CHANGELOG.md')).then(
@@ -183,6 +219,7 @@ export async function detectTools(rootDir: string, ecosystem: string): Promise<T
     linting,
     hasEnvFile: envFiles.length > 0,
     envFiles,
+    composeEnvVars,
     hasReadme,
     hasChangelog,
     hasContributing,

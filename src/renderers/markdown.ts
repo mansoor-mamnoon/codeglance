@@ -103,6 +103,9 @@ export function renderMarkdown(result: AnalysisResult): string {
   if (tools.hasEnvFile) {
     lines.push(`- **Env files:** ${tools.envFiles.join(', ')}`);
   }
+  if (tools.composeEnvVars.length > 0) {
+    lines.push(`- **Required compose env vars:** ${tools.composeEnvVars.join(', ')}`);
+  }
   lines.push('');
 
   // Languages

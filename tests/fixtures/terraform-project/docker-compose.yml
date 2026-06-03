@@ -1,0 +1,14 @@
+services:
+  api:
+    image: my-api:latest
+    environment:
+      - DATABASE_URL
+      - SECRET_KEY
+      - AWS_ACCESS_KEY_ID
+      - PORT=8080
+      - NODE_ENV=production
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=myapp

@@ -216,6 +216,12 @@ function renderTools(result: AnalysisResult): string {
     rows.push(['Env files', tools.envFiles.join('  ')]);
   }
 
+  // Required compose env vars
+  if (tools.composeEnvVars.length > 0) {
+    rows.push(['Compose env', tools.composeEnvVars.slice(0, 6).join('  ') +
+      (tools.composeEnvVars.length > 6 ? chalk.dim(`  +${tools.composeEnvVars.length - 6} more`) : '')]);
+  }
+
   if (rows.length === 0) return '';
 
   const lines: string[] = [rule('tools detected')];
