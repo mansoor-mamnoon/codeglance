@@ -6,7 +6,7 @@ This roadmap is honest about what exists vs. what is planned. Pull requests are 
 
 ## v0.1.0 (released) ✓
 
-- Framework detection (Node.js, Go, Rust, Python)
+- Framework detection (Node.js, Go, Rust, Python, C/C++)
 - Script/command extraction from manifest files
 - Entry point and "start here" file detection
 - CI, Docker, linting, env file detection
@@ -15,29 +15,43 @@ This roadmap is honest about what exists vs. what is planned. Pull requests are 
 
 ---
 
-## v0.2 — Ecosystem breadth + smarter ranking
+## v0.2.0 (released) ✓
 
-- **`--since` / `--diff` mode:** "what changed since the main branch" — useful for returning contributors
-- **Import graph analysis:** smarter "start here" ranking using actual import relationships
-- **Java/Kotlin:** Spring Boot, Quarkus, Gradle script extraction
-- **PHP:** Composer, Laravel, Symfony
-- **Ruby:** Gemfile, Rails detection improvements
-- **C/C++:** CMake, Meson, make-based project detection
-- **Elixir:** Phoenix framework detection
-- **Monorepo support:** per-package summaries for Turborepo, Nx, Go workspaces
+- **Java/Maven/Gradle** — Spring Boot, Spring Security, Spring Data JPA, Quarkus, Micronaut, Vert.x, JUnit 5
+- **Terraform** — provider detection (AWS, GCP, Azure, Kubernetes…), module and resource counts, standard `terraform` commands
+- **Docker-compose env vars** — surfaces required environment variables from `docker-compose.yml`
+- **GitHub hyperlinks in `--markdown`** — file paths link to the actual file on github.com
+- **Smarter framework deduplication** — multi-word names no longer appear twice in output
 
 ---
 
-## v0.3 — Distribution + integration
+## v0.3 — Ecosystem breadth
+
+- **Ruby:** Gemfile, Rails detection
+- **PHP:** Composer, Laravel, Symfony
+- **Kotlin/Android:** `build.gradle.kts`, Android SDK detection
+- **Elixir:** Phoenix framework detection
+- **Monorepo support:** per-package summaries for Turborepo, Nx, Go workspaces
+- **Python dev server inference:** detect `uvicorn`, `gunicorn`, `flask run` from dependencies
+
+---
+
+## v0.4 — Smarter analysis
+
+- **`--since` / `--diff` mode:** "what changed since the main branch" — useful for returning contributors
+- **Import graph analysis:** smarter "start here" ranking using actual import relationships
+- **Complexity hints:** flag files with unusual size or depth
+
+---
+
+## v0.5 — Distribution + integration
 
 - **GitHub Action:** post codeglance summary as a PR comment
   ```yaml
-  - uses: username/codeglance-action@v1
+  - uses: mansoor-mamnoon/codeglance-action@v1
   ```
-- **Badge generator:** embeddable codeglance badge for README
-- **`--watch` mode:** re-analyze on file changes (useful during onboarding)
+- **`--watch` mode:** re-analyze on file changes
 - **Homebrew tap** for macOS/Linux binary install
-- **Nix flake** for declarative environments
 
 ---
 
@@ -46,9 +60,7 @@ This roadmap is honest about what exists vs. what is planned. Pull requests are 
 These are ideas that have been requested or seem valuable. No timeline commitments.
 
 - **VS Code extension:** sidebar panel showing live codeglance summary
-- **Web / SVG export:** architecture diagram from file structure
 - **Plugin system:** custom detectors loaded from project config
-- **Complexity hints:** identify files with high cyclomatic complexity or unusual size
 - **Team onboarding integration:** generate onboarding docs in Confluence, Notion
 
 ---
@@ -65,5 +77,5 @@ To keep codeglance focused:
 
 ---
 
-Want to influence the roadmap? [Open an issue](https://github.com/username/codeglance/issues) or
+Want to influence the roadmap? [Open an issue](https://github.com/mansoor-mamnoon/codeglance/issues) or
 vote on existing ones with a 👍.

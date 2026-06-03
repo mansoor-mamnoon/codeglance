@@ -7,6 +7,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-06-02
+
+### Added
+
+- **Java ecosystem** — detects Spring Boot, Spring MVC, Spring Security, Spring Data JPA,
+  Hibernate, Quarkus, Micronaut, Vert.x, JUnit 5, Mockito from `pom.xml` / `build.gradle`.
+  Includes full Maven and Gradle command sets. Extracts Java version.
+- **Terraform ecosystem** — detects cloud providers (AWS, GCP, Azure, Kubernetes, Cloudflare…),
+  module count, and resource count from `*.tf` files. Includes all six standard
+  `terraform` commands. Recognises `main.tf`, `variables.tf`, `outputs.tf` as entry points.
+- **Docker-compose required env vars** — surfaces environment variable names that have no
+  default value in `docker-compose.yml`. Shown under "Compose env" in TOOLS DETECTED.
+- **GitHub hyperlinks in `--markdown` output** — file paths in "Where to Start" are now
+  rendered as clickable links to the actual file on github.com when a GitHub remote is detected.
+
+### Fixed
+
+- Terminal renderer now uses substring matching to deduplicate multi-word framework names
+  (e.g. "Spring Boot" no longer appeared in both the summary line and the Frameworks row).
+
 ## [0.1.0] — 2026-05-31
 
 ### Added
