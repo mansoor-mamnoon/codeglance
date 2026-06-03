@@ -77,8 +77,13 @@ export function renderMarkdown(result: AnalysisResult): string {
     lines.push('');
     lines.push('Files to open first (heuristic ranking):');
     lines.push('');
+    const branch = git.branch ?? 'main';
+    const slug   = git.githubSlug;
     for (const f of allFiles) {
-      lines.push(`- \`${f.path}\` — ${f.desc}`);
+      const fileRef = slug
+        ? `[\`${f.path}\`](https://github.com/${slug}/blob/${branch}/${f.path})`
+        : `\`${f.path}\``;
+      lines.push(`- ${fileRef} — ${f.desc}`);
     }
     lines.push('');
   }

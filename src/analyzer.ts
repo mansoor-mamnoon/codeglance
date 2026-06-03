@@ -41,6 +41,7 @@ const EMPTY_GIT: GitReport = {
   recentCommits: 0,
   recentContributors: 0,
   repoAgeDays: null,
+  githubSlug: null,
 };
 
 export async function analyze(inputPath: string, options: AnalyzeOptions = {}): Promise<AnalysisResult> {

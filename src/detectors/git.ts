@@ -12,6 +12,8 @@ export interface GitReport {
   recentCommits: number;
   recentContributors: number;
   repoAgeDays: number | null;
+  /** github.com owner/repo slug if the remote is on GitHub, otherwise null */
+  githubSlug: string | null;
 }
 
 const THIRTY_DAYS = '30 days ago';
@@ -52,12 +54,27 @@ export async function detectGit(rootDir: string): Promise<GitReport> {
     const firstDate = firstRaw.trim();
     const repoAgeDays = firstDate ? daysAgo(firstDate) : null;
 
-    return { isRepo: true, branch, lastCommit, recentCommits, recentContributors, repoAgeDays };
+    const remoteRaw = await git.raw(['remote', 'get-url', 'origin']).catch(() => '');
+    const githubSlug = parseGithubSlug(remoteRaw.trim());
+
+    return { isRepo: true, branch, lastCommit, recentCommits, recentContributors, repoAgeDays, githubSlug };
   } catch {
     return emptyReport();
   }
 }
 
+/** Extracts "owner/repo" from a GitHub remote URL, or returns null. */
+function parseGithubSlug(remoteUrl: string): string | null {
+  if (!remoteUrl) return null;
+  // HTTPS: https://github.com/owner/repo.git
+  const https = remoteUrl.match(/https?:\/\/github\.com\/([^/]+\/[^/]+?)(?:\.git)?$/);
+  if (https?.[1]) return https[1];
+  // SSH: git@github.com:owner/repo.git
+  const ssh = remoteUrl.match(/git@github\.com:([^/]+\/[^/]+?)(?:\.git)?$/);
+  if (ssh?.[1]) return ssh[1];
+  return null;
+}
+
 function emptyReport(): GitReport {
-  return { isRepo: false, branch: null, lastCommit: null, recentCommits: 0, recentContributors: 0, repoAgeDays: null };
+  return { isRepo: false, branch: null, lastCommit: null, recentCommits: 0, recentContributors: 0, repoAgeDays: null, githubSlug: null };
 }
