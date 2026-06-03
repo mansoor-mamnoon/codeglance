@@ -658,7 +658,7 @@ async function fromJava(rootDir: string): Promise<{
   const frameworks: DetectedFramework[] = [];
   const seen = new Set<string>();
   let javaVersion: string | null = null;
-  let buildTool = hasPom ? 'Maven' : 'Gradle';
+  const buildTool = hasPom ? 'Maven' : 'Gradle';
 
   if (hasPom) {
     try {
