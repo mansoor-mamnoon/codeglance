@@ -319,9 +319,10 @@ Add a fixture + test, run `npm test`, submit a PR. Full guide: [CONTRIBUTING.md]
 
 ## Roadmap
 
-**v0.2** — Java/Kotlin, monorepo support, `--since` diff mode  
-**v0.3** — GitHub Action, Homebrew tap  
-**Future** — VS Code extension, `--watch` mode, plugin system
+**v0.2.0** ✓ — Java/Maven/Spring Boot, Terraform, docker-compose env vars, GitHub hyperlinks in `--markdown`  
+**v0.3** — Ruby, PHP, Kotlin/Android, Elixir, monorepo support  
+**v0.4** — `--since` diff mode, import graph analysis  
+**v0.5** — GitHub Action, Homebrew tap, `--watch` mode  
 
 Full roadmap: [ROADMAP.md](ROADMAP.md)
 
