@@ -273,6 +273,26 @@ export async function detectScripts(rootDir: string, ecosystem: string): Promise
     commands = await fromPython(rootDir);
   } else if (ecosystem === 'C++' || ecosystem === 'C') {
     commands = await fromCMake(rootDir);
+  } else if (ecosystem === 'Java') {
+    const hasPom    = await exists(path.join(rootDir, 'pom.xml'));
+    const hasGradle = await exists(path.join(rootDir, 'build.gradle')) ||
+                      await exists(path.join(rootDir, 'build.gradle.kts'));
+    if (hasPom) {
+      commands = [
+        { command: 'mvn spring-boot:run', description: 'start Spring Boot app',   kind: 'dev',   source: 'pom.xml' },
+        { command: 'mvn package',         description: 'build JAR',               kind: 'build', source: 'pom.xml' },
+        { command: 'mvn test',            description: 'run test suite',           kind: 'test',  source: 'pom.xml' },
+        { command: 'mvn verify',          description: 'run tests + integration',  kind: 'test',  source: 'pom.xml' },
+        { command: 'mvn clean',           description: 'clean build output',       kind: 'build', source: 'pom.xml' },
+      ];
+    } else if (hasGradle) {
+      commands = [
+        { command: 'gradle bootRun',   description: 'start Spring Boot app', kind: 'dev',   source: 'build.gradle' },
+        { command: 'gradle build',     description: 'build JAR',             kind: 'build', source: 'build.gradle' },
+        { command: 'gradle test',      description: 'run test suite',        kind: 'test',  source: 'build.gradle' },
+        { command: 'gradle clean',     description: 'clean build output',    kind: 'build', source: 'build.gradle' },
+      ];
+    }
   } else if (ecosystem === 'Terraform') {
     commands = [
       { command: 'terraform init',    description: 'initialise providers and modules', kind: 'build',  source: '*.tf' },

@@ -178,6 +178,43 @@ describe('detectFrameworks — Terraform', () => {
   });
 });
 
+describe('detectFrameworks — Java (Maven)', () => {
+  const dir = path.join(FIXTURES, 'java-project');
+
+  it('detects Java ecosystem', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.ecosystem).toBe('Java');
+  });
+
+  it('detects Spring Boot as primary framework', async () => {
+    const result = await detectFrameworks(dir);
+    const names = result.all.map((f) => f.name);
+    expect(names).toContain('Spring Boot');
+  });
+
+  it('detects Spring Data JPA as ORM', async () => {
+    const result = await detectFrameworks(dir);
+    const names = result.all.map((f) => f.name);
+    expect(names).toContain('Spring Data JPA');
+  });
+
+  it('detects Spring Security', async () => {
+    const result = await detectFrameworks(dir);
+    const names = result.all.map((f) => f.name);
+    expect(names).toContain('Spring Security');
+  });
+
+  it('extracts Java version from pom.xml', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.runtime).toContain('21');
+  });
+
+  it('summary includes Spring Boot', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.summary).toContain('Spring Boot');
+  });
+});
+
 describe('detectFrameworks — unknown project', () => {
   it('returns Unknown for a directory with no manifest', async () => {
     const result = await detectFrameworks('/tmp');

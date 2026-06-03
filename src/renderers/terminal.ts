@@ -85,12 +85,10 @@ function renderFrameworks(result: AnalysisResult): string {
     lines.push(`  ${chalk.dim('Pkg manager')} ${scripts.packageManager}`);
   }
 
-  // Primary frameworks with versions (skip TypeScript and CLI frameworks already in summary)
-  const summaryNames = new Set(
-    frameworks.summary.split(/[\s,·]+/).map((s) => s.toLowerCase()),
-  );
+  // Primary frameworks (skip those already mentioned in the summary line)
+  const summaryLower = frameworks.summary.toLowerCase();
   const primary = frameworks.primary.filter(
-    (f) => f.name !== 'TypeScript' && !summaryNames.has(f.name.toLowerCase()),
+    (f) => f.name !== 'TypeScript' && !summaryLower.includes(f.name.toLowerCase()),
   );
   if (primary.length > 0) {
     const tags = primary.map((f) =>
@@ -102,7 +100,7 @@ function renderFrameworks(result: AnalysisResult): string {
   // Secondary: group by category (skip ecosystem-label entries already in the summary)
   const byCategory = new Map<string, string[]>();
   for (const f of frameworks.secondary) {
-    if (summaryNames.has(f.name.toLowerCase())) continue;
+    if (summaryLower.includes(f.name.toLowerCase())) continue;
     const list = byCategory.get(f.category) ?? [];
     list.push(f.name + (f.version ? ` ${f.version}` : ''));
     byCategory.set(f.category, list);

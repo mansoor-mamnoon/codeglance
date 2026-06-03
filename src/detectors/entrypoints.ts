@@ -58,6 +58,12 @@ const CPP_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
   [['CMakeLists.txt'], 'CMake build config', 'config'],
 ];
 
+const JAVA_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
+  [['src/main/java'], 'main source root', 'main'],
+  [['pom.xml'],       'Maven build config', 'config'],
+  [['build.gradle', 'build.gradle.kts'], 'Gradle build config', 'config'],
+];
+
 const TERRAFORM_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
   [['main.tf'],      'root module entry point', 'main'],
   [['variables.tf'], 'input variable definitions', 'config'],
@@ -184,6 +190,8 @@ export async function detectEntryPoints(
     entries.push(...(await scanCandidates(rootDir, PYTHON_CANDIDATES, seen)));
   } else if (ecosystem === 'C++' || ecosystem === 'C') {
     entries.push(...(await scanCandidates(rootDir, CPP_CANDIDATES, seen)));
+  } else if (ecosystem === 'Java') {
+    entries.push(...(await scanCandidates(rootDir, JAVA_CANDIDATES, seen)));
   } else if (ecosystem === 'Terraform') {
     entries.push(...(await scanCandidates(rootDir, TERRAFORM_CANDIDATES, seen)));
   }

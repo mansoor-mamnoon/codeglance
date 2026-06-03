@@ -622,6 +622,84 @@ async function fromTerraform(rootDir: string): Promise<{
   };
 }
 
+// Known Maven/Gradle dependency artifactIds → display name + category
+const JAVA_DEPS: Array<[RegExp, string, FrameworkCategory]> = [
+  [/spring-boot-starter-web/,       'Spring Boot',   'web_framework'],
+  [/spring-boot-starter(?!-\w)/,    'Spring Boot',   'web_framework'],
+  [/spring-webmvc/,                 'Spring MVC',    'web_framework'],
+  [/quarkus-resteasy/,              'Quarkus',       'web_framework'],
+  [/micronaut-http-server/,         'Micronaut',     'web_framework'],
+  [/vertx-web/,                     'Vert.x',        'web_framework'],
+  [/spring-boot-starter-data-jpa/,  'Spring Data JPA','orm'],
+  [/hibernate-core/,                'Hibernate',     'orm'],
+  [/mybatis/,                       'MyBatis',       'orm'],
+  [/spring-boot-starter-security/,  'Spring Security','auth'],
+  [/spring-boot-starter-test|junit-jupiter/, 'JUnit 5', 'testing'],
+  [/mockito/,                       'Mockito',       'testing'],
+  [/lombok/,                        'Lombok',        'other'],
+];
+
+async function javaFileExists(p: string): Promise<boolean> {
+  try { await (await import('node:fs/promises')).access(p); return true; }
+  catch { return false; }
+}
+
+async function fromJava(rootDir: string): Promise<{
+  frameworks: DetectedFramework[];
+  runtime: string | null;
+  ecosystem: string;
+} | null> {
+  // Try pom.xml (Maven) first, then build.gradle (Gradle)
+  const hasPom    = await javaFileExists(path.join(rootDir, 'pom.xml'));
+  const hasGradle = await javaFileExists(path.join(rootDir, 'build.gradle')) ||
+                    await javaFileExists(path.join(rootDir, 'build.gradle.kts'));
+  if (!hasPom && !hasGradle) return null;
+
+  const frameworks: DetectedFramework[] = [];
+  const seen = new Set<string>();
+  let javaVersion: string | null = null;
+  let buildTool = hasPom ? 'Maven' : 'Gradle';
+
+  if (hasPom) {
+    try {
+      const content = await readFile(path.join(rootDir, 'pom.xml'), 'utf8');
+      const jv = content.match(/<java\.version>([\d.]+)<\/java\.version>/)?.[1];
+      if (jv) javaVersion = jv;
+      for (const [pattern, name, category] of JAVA_DEPS) {
+        if (pattern.test(content) && !seen.has(name)) {
+          frameworks.push({ name, category, version: null, ecosystem: 'Java' });
+          seen.add(name);
+        }
+      }
+    } catch { /* ok */ }
+  }
+
+  if (hasGradle) {
+    const gradleFile = (await javaFileExists(path.join(rootDir, 'build.gradle.kts')))
+      ? 'build.gradle.kts' : 'build.gradle';
+    try {
+      const content = await readFile(path.join(rootDir, gradleFile), 'utf8');
+      const jv = content.match(/sourceCompatibility\s*=\s*['"]?(\d+)['"]?/)?.[1] ??
+                 content.match(/JavaVersion\.VERSION_(\d+)/)?.[1];
+      if (jv && !javaVersion) javaVersion = jv;
+      for (const [pattern, name, category] of JAVA_DEPS) {
+        if (pattern.test(content) && !seen.has(name)) {
+          frameworks.push({ name, category, version: null, ecosystem: 'Java' });
+          seen.add(name);
+        }
+      }
+    } catch { /* ok */ }
+  }
+
+  // Always emit at least the build tool so the summary pipeline has something to work with
+  if (!seen.has(buildTool)) {
+    frameworks.push({ name: buildTool, category: 'build_tool', version: null, ecosystem: 'Java' });
+  }
+
+  const runtime = javaVersion ? `Java ${javaVersion}` : 'Java';
+  return { frameworks, runtime, ecosystem: 'Java' };
+}
+
 export async function detectFrameworks(rootDir: string): Promise<FrameworkReport> {
   // Try each ecosystem in priority order; use the first one that produces results
   const result =
@@ -630,6 +708,7 @@ export async function detectFrameworks(rootDir: string): Promise<FrameworkReport
     (await fromCargoToml(rootDir)) ??
     (await fromPythonManifests(rootDir)) ??
     (await fromCMake(rootDir)) ??
+    (await fromJava(rootDir)) ??
     (await fromTerraform(rootDir));
 
   if (!result || result.frameworks.length === 0) {
