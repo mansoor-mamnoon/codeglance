@@ -99,9 +99,10 @@ function renderFrameworks(result: AnalysisResult): string {
     lines.push(`  ${chalk.dim('Frameworks')}  ${tags.join(chalk.dim('  ·  '))}`);
   }
 
-  // Secondary: group by category
+  // Secondary: group by category (skip ecosystem-label entries already in the summary)
   const byCategory = new Map<string, string[]>();
   for (const f of frameworks.secondary) {
+    if (summaryNames.has(f.name.toLowerCase())) continue;
     const list = byCategory.get(f.category) ?? [];
     list.push(f.name + (f.version ? ` ${f.version}` : ''));
     byCategory.set(f.category, list);

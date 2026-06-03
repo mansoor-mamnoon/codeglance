@@ -273,6 +273,15 @@ export async function detectScripts(rootDir: string, ecosystem: string): Promise
     commands = await fromPython(rootDir);
   } else if (ecosystem === 'C++' || ecosystem === 'C') {
     commands = await fromCMake(rootDir);
+  } else if (ecosystem === 'Terraform') {
+    commands = [
+      { command: 'terraform init',    description: 'initialise providers and modules', kind: 'build',  source: '*.tf' },
+      { command: 'terraform plan',    description: 'preview infrastructure changes',   kind: 'build',  source: '*.tf' },
+      { command: 'terraform apply',   description: 'apply infrastructure changes',     kind: 'deploy', source: '*.tf' },
+      { command: 'terraform destroy', description: 'destroy all managed resources',    kind: 'deploy', source: '*.tf' },
+      { command: 'terraform fmt',     description: 'format configuration files',       kind: 'lint',   source: '*.tf' },
+      { command: 'terraform validate', description: 'validate configuration',          kind: 'test',   source: '*.tf' },
+    ];
   }
 
   // Always append Makefile commands when present (common in Go/C/mixed repos)

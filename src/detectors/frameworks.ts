@@ -479,6 +479,11 @@ function buildSummary(
     return `${ecosystem} service with ${aiPkg.name}`;
   }
 
+  if (ecosystem === 'Terraform') {
+    // runtime holds "AWS + GCP · 3 modules · 12 resources" — no need to repeat framework name
+    return 'Terraform project';
+  }
+
   if (ecosystem === 'C++' || ecosystem === 'C') {
     const extras = frameworks.map((f) => f.name).slice(0, 3);
     return extras.length > 0
@@ -553,6 +558,70 @@ async function fromCMake(rootDir: string): Promise<{
   return { frameworks, runtime, ecosystem: 'C++' };
 }
 
+// Maps Terraform provider source names to display names
+const TERRAFORM_PROVIDERS: Record<string, string> = {
+  aws: 'AWS', google: 'GCP', azurerm: 'Azure', azuread: 'Azure AD',
+  kubernetes: 'Kubernetes', helm: 'Helm', digitalocean: 'DigitalOcean',
+  cloudflare: 'Cloudflare', github: 'GitHub', datadog: 'Datadog',
+  vault: 'Vault', consul: 'Consul', nomad: 'Nomad',
+};
+
+async function fromTerraform(rootDir: string): Promise<{
+  frameworks: DetectedFramework[];
+  runtime: string | null;
+  ecosystem: string;
+} | null> {
+  const { readdir } = await import('node:fs/promises');
+  let tfFiles: string[];
+  try {
+    const entries = await readdir(rootDir);
+    tfFiles = entries.filter((e) => e.endsWith('.tf'));
+  } catch {
+    return null;
+  }
+  if (tfFiles.length === 0) return null;
+
+  const providers = new Set<string>();
+  let moduleCount = 0;
+  let resourceCount = 0;
+
+  for (const file of tfFiles) {
+    try {
+      const content = await readFile(path.join(rootDir, file), 'utf8');
+
+      // provider "aws" { ... }
+      for (const m of content.matchAll(/^provider\s+"([^"]+)"/gm)) {
+        const mapped = m[1] ? (TERRAFORM_PROVIDERS[m[1].toLowerCase()] ?? m[1]) : null;
+        if (mapped) providers.add(mapped);
+      }
+      // required_providers { aws = { source = "hashicorp/aws" } }
+      for (const m of content.matchAll(/(\w+)\s*=\s*\{\s*\n?\s*source\s*=/gm)) {
+        const key = m[1]?.toLowerCase();
+        if (key && TERRAFORM_PROVIDERS[key]) providers.add(TERRAFORM_PROVIDERS[key]);
+      }
+
+      moduleCount   += (content.match(/^module\s+"/gm)   ?? []).length;
+      resourceCount += (content.match(/^resource\s+"/gm) ?? []).length;
+    } catch { /* skip unreadable files */ }
+  }
+
+  // Always return at least one framework entry so the summary pipeline runs
+  const frameworks: DetectedFramework[] = [
+    { name: 'Terraform', category: 'build_tool', version: null, ecosystem: 'Terraform' },
+  ];
+
+  const parts: string[] = [];
+  if (providers.size > 0) parts.push([...providers].join(' + '));
+  if (moduleCount   > 0) parts.push(`${moduleCount} module${moduleCount > 1 ? 's' : ''}`);
+  if (resourceCount > 0) parts.push(`${resourceCount} resource${resourceCount > 1 ? 's' : ''}`);
+
+  return {
+    frameworks,
+    runtime: parts.length > 0 ? parts.join('  ·  ') : null,
+    ecosystem: 'Terraform',
+  };
+}
+
 export async function detectFrameworks(rootDir: string): Promise<FrameworkReport> {
   // Try each ecosystem in priority order; use the first one that produces results
   const result =
@@ -560,11 +629,16 @@ export async function detectFrameworks(rootDir: string): Promise<FrameworkReport
     (await fromGoMod(rootDir)) ??
     (await fromCargoToml(rootDir)) ??
     (await fromPythonManifests(rootDir)) ??
-    (await fromCMake(rootDir));
+    (await fromCMake(rootDir)) ??
+    (await fromTerraform(rootDir));
 
   if (!result || result.frameworks.length === 0) {
+    // Still return a useful summary if we know the ecosystem (e.g. Terraform with no providers)
+    const summary = result?.ecosystem && result.ecosystem !== 'Unknown'
+      ? `${result.ecosystem} project`
+      : 'Unknown project type';
     return {
-      summary: 'Unknown project type',
+      summary,
       primary: [],
       secondary: [],
       all: [],

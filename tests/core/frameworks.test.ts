@@ -148,6 +148,36 @@ describe('detectFrameworks — Python', () => {
   });
 });
 
+describe('detectFrameworks — Terraform', () => {
+  const dir = path.join(FIXTURES, 'terraform-project');
+
+  it('detects Terraform ecosystem', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.ecosystem).toBe('Terraform');
+  });
+
+  it('summary is Terraform project', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.summary).toBe('Terraform project');
+  });
+
+  it('runtime includes detected cloud providers', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.runtime).toContain('AWS');
+    expect(result.runtime).toContain('GCP');
+  });
+
+  it('runtime includes module count', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.runtime).toContain('2 modules');
+  });
+
+  it('runtime includes resource count', async () => {
+    const result = await detectFrameworks(dir);
+    expect(result.runtime).toContain('3 resources');
+  });
+});
+
 describe('detectFrameworks — unknown project', () => {
   it('returns Unknown for a directory with no manifest', async () => {
     const result = await detectFrameworks('/tmp');

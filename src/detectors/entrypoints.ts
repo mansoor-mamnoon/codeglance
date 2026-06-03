@@ -58,6 +58,12 @@ const CPP_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
   [['CMakeLists.txt'], 'CMake build config', 'config'],
 ];
 
+const TERRAFORM_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
+  [['main.tf'],      'root module entry point', 'main'],
+  [['variables.tf'], 'input variable definitions', 'config'],
+  [['outputs.tf'],   'output value definitions', 'config'],
+];
+
 const SHARED_CANDIDATES: Array<[string[], string, EntryPoint['type']]> = [
   [['Dockerfile'], 'container definition', 'infra'],
   [['docker-compose.yml', 'docker-compose.yaml'], 'compose services', 'infra'],
@@ -178,6 +184,8 @@ export async function detectEntryPoints(
     entries.push(...(await scanCandidates(rootDir, PYTHON_CANDIDATES, seen)));
   } else if (ecosystem === 'C++' || ecosystem === 'C') {
     entries.push(...(await scanCandidates(rootDir, CPP_CANDIDATES, seen)));
+  } else if (ecosystem === 'Terraform') {
+    entries.push(...(await scanCandidates(rootDir, TERRAFORM_CANDIDATES, seen)));
   }
 
   // Always add shared infrastructure entries (Docker, Makefile)
