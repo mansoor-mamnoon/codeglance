@@ -238,6 +238,8 @@ codeglance --markdown --output docs/codebase-tour.md
 
 Check it in. Regenerate when the architecture changes. [See the generated output for this repo →](docs/codebase-tour.md)
 
+On GitHub repos, file paths in the "Where to Start" section are automatically linked to the actual files on github.com.
+
 ---
 
 ## Supported ecosystems
@@ -249,6 +251,8 @@ Check it in. Regenerate when the architecture changes. [See the generated output
 | **Go** | `go.mod` | Gin, Echo, Fiber, Chi, GORM, Cobra, gRPC, Zap |
 | **Rust** | `Cargo.toml` | Axum, Actix-web, Rocket, Tokio, SQLx, Clap, Serde, Tracing |
 | **C/C++** | `CMakeLists.txt` | GoogleTest, Catch2, Boost, Qt, OpenCV; CMake version and C++ standard |
+| **Java** | `pom.xml`, `build.gradle` | Spring Boot, Spring MVC, Spring Security, Spring Data JPA, Hibernate, Quarkus, Micronaut, Vert.x, JUnit 5, Mockito |
+| **Terraform** | `*.tf` | Cloud providers (AWS, GCP, Azure, Kubernetes, Cloudflare…), module count, resource count; all six standard `terraform` commands |
 
 ---
 
@@ -281,7 +285,7 @@ codeglance is transparent about what it is and what it is not:
 - **Framework detection depends on manifests.** Projects without a standard package file (go.mod, package.json, Cargo.toml, pyproject.toml, CMakeLists.txt) produce shallow output.
 - **Mixed-ecosystem repos** (a Python backend + Node.js frontend) are analyzed from the first detected ecosystem. The other ecosystem's files still appear in language stats and WHERE TO START.
 - **Library repos** that are a framework themselves (e.g., fastapi, gin-gonic/gin) show their own dependencies, not their framework name.
-- **Java, Ruby, and PHP are not yet supported.** `.java`, `.rb`, and `.php` files are counted in language stats, but manifest files (pom.xml, Gemfile, composer.json) are not parsed and no framework names are detected. See [Contributing](#contributing) to add support.
+- **Ruby and PHP are not yet supported.** `.rb` and `.php` files are counted in language stats, but Gemfile and composer.json are not parsed. See [Contributing](#contributing) to add support.
 - **Monorepos** get a single summary, not per-package analysis.
 - **Large repos** are capped at 25,000 files. A note appears in the output.
 - **"Start here" ranking is approximate.** Based on file depth, naming patterns, and size — not import graph analysis.
@@ -303,13 +307,13 @@ const NODE_FRAMEWORKS: FrameworkDef[] = [
 Add a fixture + test, run `npm test`, submit a PR. Full guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 **Open contributions:**
-- Java/Spring Boot detector (pom.xml, build.gradle)
 - Ruby/Rails detector (Gemfile)
 - PHP/Laravel/Symfony detector (composer.json)
 - Elixir/Phoenix detector (mix.exs)
 - pnpm workspace monorepo detection
 - Python dev server command inference (e.g., `uvicorn` for FastAPI)
 - Improve Rust "start here" ranking with workspace support
+- Kotlin/Android detector (build.gradle.kts)
 
 ---
 
